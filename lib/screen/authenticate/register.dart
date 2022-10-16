@@ -18,6 +18,108 @@ class _RegisterState extends State<Register> {
   String password = '';
   String error = '';
   String name = '';
+  String phoneNumber = '';
+  String dropdownDistrict = 'Achham';
+  String dropdownGender = 'Male';
+  String dropdownGroup = 'A+';
+
+  bool? checkedValue = false;
+
+  var group = [
+    'A+',
+    'A-',
+    'B+',
+    'B-',
+    'O+',
+    'O-',
+    'AB+',
+    'AB-',
+  ];
+
+  // List of items in our dropdown menu
+  var itemss = [
+    'Male',
+    'Female',
+    'Prefer not to say',
+  ];
+
+  var items = [
+    "Achham",
+    "Arghakhanchi",
+    "Baglung",
+    "Baitadi",
+    "Bajhang",
+    "Bajura",
+    "Banke",
+    "Bara",
+    "Bardiya",
+    "Bhaktapur",
+    "Bhojpur",
+    "Chitwan",
+    "Dadeldhura",
+    "Dailekh",
+    "Dang deukhuri",
+    "Darchula",
+    "Dhading",
+    "Dhankuta",
+    "Dhanusa",
+    "Dholkha",
+    "Dolpa",
+    "Doti",
+    "Gorkha",
+    "Gulmi",
+    "Humla",
+    "Ilam",
+    "Jajarkot",
+    "Jhapa",
+    "Jumla",
+    "Kailali",
+    "Kalikot",
+    "Kanchanpur",
+    "Kapilvastu",
+    "Kaski",
+    "Kathmandu",
+    "Kavrepalanchok",
+    "Khotang",
+    "Lalitpur",
+    "Lamjung",
+    "Mahottari",
+    "Makwanpur",
+    "Manang",
+    "Morang",
+    "Mugu",
+    "Mustang",
+    "Myagdi",
+    "Nawalparasi",
+    "Nuwakot",
+    "Okhaldhunga",
+    "Palpa",
+    "Panchthar",
+    "Parbat",
+    "Parsa",
+    "Pyuthan",
+    "Ramechhap",
+    "Rasuwa",
+    "Rautahat",
+    "Rolpa",
+    "Rukum",
+    "Rupandehi",
+    "Salyan",
+    "Sankhuwasabha",
+    "Saptari",
+    "Sarlahi",
+    "Sindhuli",
+    "Sindhupalchok",
+    "Siraha",
+    "Solukhumbu",
+    "Sunsari",
+    "Surkhet",
+    "Syangja",
+    "Tanahu",
+    "Taplejung",
+    "Terhathum",
+    "Udayapur",
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -43,8 +145,8 @@ class _RegisterState extends State<Register> {
             child: Form(
               key: _formKey,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                // crossAxisAlignment: CrossAxisAlignment.center,
+                //mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   const SizedBox(
                     height: 10.0,
@@ -100,6 +202,39 @@ class _RegisterState extends State<Register> {
                       });
                     },
                   ),
+                  const SizedBox(
+                    height: 10.0,
+                  ),
+                  TextFormField(
+                    decoration: const InputDecoration(
+                        hintText: 'Enter your phone number',
+                        labelText: 'Phone number',
+                        floatingLabelStyle: TextStyle(color: Colors.red),
+                        border: OutlineInputBorder(),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.red))),
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return 'Please enter your mobile number';
+                      }
+                      // Check if the entered mobile number has the right format
+                      if (value.length != 10) {
+                        return 'Mobile Number must be of 10 digit';
+                      }
+                      String pattern = r'(^9[7|8]\d{8}$)';
+                      RegExp regExp = new RegExp(pattern);
+                      if (!regExp.hasMatch(value)) {
+                        return 'Mobile number not valid';
+                      }
+                      // Return null if the entered mobile number is valid
+                      return null;
+                    },
+                    onChanged: (val) {
+                      setState(() {
+                        phoneNumber = val;
+                      });
+                    },
+                  ),
                   SizedBox(
                     height: 10.0,
                   ),
@@ -129,41 +264,182 @@ class _RegisterState extends State<Register> {
                     },
                   ),
                   SizedBox(height: 20.0),
-                  SizedBox(
-                    height: 50.0,
-                    width: 150.0,
-                    child: ElevatedButton(
-                      //color: Colors.red,
-                      child: Text("Register".toUpperCase(),
-                          style: TextStyle(fontSize: 14)),
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.red,
-                        elevation: 3,
-                        onPrimary: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(32.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Select your district    ',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
                         ),
                       ),
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          dynamic result = await _auth
-                              .registerWithEmailAndPassword(email, password);
-                          print("null is: $result");
-                          if (result == null) {
-                            setState(() {
-                              error = 'Please enter valid details';
-                            });
-                          }
-                        }
-                        // final bool?
-                        // dynamic result = await _auth.registerWithEmailAndPassword(email, password);
-                        // isValid = _formKey.currentState?.validate();
-                        // if (isValid == true) {
-                        //   print(email);
-                        //   print(password);
-                        // }
-                      },
-                    ),
+                      DropdownButton(
+                        // Initial Value
+                        value: dropdownDistrict,
+
+                        // Down Arrow Icon
+                        icon: const Icon(Icons.keyboard_arrow_down),
+
+                        // Array list of items
+                        items: items.map((String items) {
+                          return DropdownMenuItem(
+                            value: items,
+                            child: Text(items),
+                          );
+                        }).toList(),
+                        // After selecting the desired option,it will
+                        // change button value to selected value
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            dropdownDistrict = newValue!;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Select your gender    ',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                      DropdownButton(
+                        // Initial Value
+                        value: dropdownGender,
+
+                        // Down Arrow Icon
+                        icon: const Icon(Icons.keyboard_arrow_down),
+
+                        // Array list of items
+                        items: itemss.map((String itemss) {
+                          return DropdownMenuItem(
+                            value: itemss,
+                            child: Text(itemss),
+                          );
+                        }).toList(),
+                        // After selecting the desired option,it will
+                        // change button value to selected value
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            dropdownGender = newValue!;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Select your blood group         ',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                      DropdownButton(
+                        // Initial Value
+                        value: dropdownGroup,
+
+                        // Down Arrow Icon
+                        icon: const Icon(Icons.keyboard_arrow_down),
+
+                        // Array list of items
+                        items: group.map((String group) {
+                          return DropdownMenuItem(
+                            value: group,
+                            child: Text(group),
+                          );
+                        }).toList(),
+                        // After selecting the desired option,it will
+                        // change button value to selected value
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            dropdownGroup = newValue!;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  // Row(
+                  //   children: <Widget>[
+                  //     SizedBox(
+                  //       width: 10,
+                  //     ), //SizedBox
+                  //     Text(
+                  //       'Library Implementation Of Searching Algorithm: ',
+                  //       style: TextStyle(fontSize: 17.0),
+                  //     ), //Text
+                  //     SizedBox(width: 10), //SizedBox
+                  //     /** Checkbox Widget **/
+                  //     Checkbox(
+                  //       value: this.value,
+                  //       onChanged: (bool value) {
+                  //         setState(() {
+                  //           this.value = value;
+                  //         });
+                  //       },
+                  //     ), //Checkbox
+                  //   ], //<Widget>[]
+                  // ),
+                  CheckboxListTile(
+                    title: Text("Sign up as a donor"),
+                    value: checkedValue,
+                    onChanged: (newValue) {
+                      setState(() {
+                        checkedValue = newValue;
+                      });
+                    },
+                    controlAffinity: ListTileControlAffinity
+                        .leading, //  <-- leading Checkbox
+                  ),
+                  SizedBox(height: 20.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: 50.0,
+                        width: 250,
+                        child: ElevatedButton(
+                          //color: Colors.red,
+                          child: Text("Register".toUpperCase(),
+                              style: TextStyle(fontSize: 14)),
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.red,
+                            elevation: 3,
+                            onPrimary: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(32.0),
+                            ),
+                          ),
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              dynamic result =
+                                  await _auth.registerWithEmailAndPassword(
+                                      email, password);
+                              print("null is: $result");
+                              if (result == null) {
+                                setState(() {
+                                  error = 'Please enter valid details';
+                                });
+                              }
+                            }
+                            // final bool?
+                            // dynamic result = await _auth.registerWithEmailAndPassword(email, password);
+                            // isValid = _formKey.currentState?.validate();
+                            // if (isValid == true) {
+                            //   print(email);
+                            //   print(password);
+                            // }
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(
                     height: 12.0,
