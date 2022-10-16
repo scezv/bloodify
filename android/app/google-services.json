@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "486427912317",
+    "project_id": "bloodify-a17af",
+    "storage_bucket": "bloodify-a17af.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:486427912317:android:72a37ebb7a890259056914",
+        "android_client_info": {
+          "package_name": "com.example.bloodify"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "486427912317-ucv15gctlah0dk1gomacmpfld91kig7n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIJ3VMnLwAJoAgFyp4pe_2DZZYF53IuSw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "486427912317-ucv15gctlah0dk1gomacmpfld91kig7n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
