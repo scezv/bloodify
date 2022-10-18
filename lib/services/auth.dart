@@ -37,8 +37,8 @@ class AuthService {
       print('user signed in');
       User? user = result.user;
       return _userFromFirebase(user);
-    } catch (e) {
-      print(e);
+    } on FirebaseAuthException catch (e) {
+      //print(e.code);
       return null;
     }
   }
@@ -52,8 +52,8 @@ class AuthService {
       print('user created');
       User? user = result.user;
       return _userFromFirebase(user);
-    } catch (e) {
-      print(e);
+    } on FirebaseAuthException catch (e) {
+      print(e.message);
       return null;
     }
   }
@@ -63,7 +63,7 @@ class AuthService {
     try {
       return await _auth.signOut();
       print('user signed out');
-    } catch (e) {
+    } on FirebaseAuthException catch (e) {
       return null;
     }
   }

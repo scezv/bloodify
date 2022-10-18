@@ -1,5 +1,7 @@
 import 'package:bloodify/services/auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Register extends StatefulWidget {
   final Function toggleView;
@@ -12,12 +14,16 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
+  final donorRef = FirebaseFirestore.instance.collection('donor');
+  final userRef = FirebaseFirestore.instance.collection('user');
+  final FirebaseAuth auth = FirebaseAuth.instance;
 
   //text field state
   String email = '';
   String password = '';
   String error = '';
   String name = '';
+  String location = '';
   String phoneNumber = '';
   String dropdownDistrict = 'Achham';
   String dropdownGender = 'Male';
@@ -263,6 +269,29 @@ class _RegisterState extends State<Register> {
                       });
                     },
                   ),
+                  const SizedBox(
+                    height: 10.0,
+                  ),
+                  TextFormField(
+                    decoration: const InputDecoration(
+                        hintText: 'Enter your location',
+                        labelText: 'Location',
+                        floatingLabelStyle: TextStyle(color: Colors.red),
+                        border: OutlineInputBorder(),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.red))),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Enter your location';
+                      }
+                      return null;
+                    },
+                    onChanged: (val) {
+                      setState(() {
+                        location = val;
+                      });
+                    },
+                  ),
                   SizedBox(height: 20.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -422,7 +451,28 @@ class _RegisterState extends State<Register> {
                               dynamic result =
                                   await _auth.registerWithEmailAndPassword(
                                       email, password);
-                              print("null is: $result");
+                              final User? cuser = auth.currentUser;
+                              final uid = cuser?.uid;
+                              if (checkedValue == true) {
+                                donorRef.doc(uid).set({
+                                  "id": uid,
+                                  "displayName": name,
+                                  "location": location,
+                                  "phoneNumber": phoneNumber,
+                                  "bloodGroup": dropdownGroup,
+                                  'gender': dropdownGender,
+                                  'district': dropdownDistrict,
+                                });
+                              }
+                              userRef.doc(uid).set({
+                                "id": uid,
+                                "displayName": name,
+                                "location": location,
+                                "phoneNumber": phoneNumber,
+                                "bloodGroup": dropdownGroup,
+                                'gender': dropdownGender,
+                                'district': dropdownDistrict,
+                              });
                               if (result == null) {
                                 setState(() {
                                   error = 'Please enter valid details';

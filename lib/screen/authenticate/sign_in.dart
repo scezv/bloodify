@@ -143,6 +143,7 @@ class _SignInState extends State<SignIn> {
                       if (_formKey.currentState!.validate()) {
                         dynamic result =
                             _auth.signInWithEmailAndPassword(email, password);
+                        print('result is $result');
                         if (result == null) {
                           setState(() {
                             error = 'Sign in failed with these credentials';
