@@ -18,7 +18,18 @@ class _MainScreenState extends State<MainScreen> {
     final User? user = auth.currentUser;
     return Scaffold(
         appBar: AppBar(
-          title: Text("This is Main Page"),
+          title: Text('Bloodify'),
+          backgroundColor: Color.fromARGB(255, 173, 45, 45),
+          elevation: 0.0,
+          actions: <Widget>[
+            FlatButton.icon(
+              icon: Icon(Icons.logout),
+              onPressed: () async {
+                await auth.signOut();
+              },
+              label: Text('Sign Out'),
+            )
+          ],
         ),
         floatingActionButton: null,
         body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(

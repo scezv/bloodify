@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:bloodify/screen/wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -18,12 +19,13 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(
         Duration(seconds: 1),
         () => Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (BuildContext context) => const LoginScreen())));
+            builder: (BuildContext context) => const Wrapper())));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Center(
           child: Image.asset(
         'assets/img/logo.png',

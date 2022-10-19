@@ -1,34 +1,36 @@
-import 'package:bloodify/services/auth.dart';
+import 'dart:math';
+
+import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 
-class Register extends StatefulWidget {
-  final Function toggleView;
-  Register({required this.toggleView});
+class NewBloodRequest extends StatefulWidget {
+  const NewBloodRequest({Key? key}) : super(key: key);
 
   @override
-  State<Register> createState() => _RegisterState();
+  State<NewBloodRequest> createState() => _NewBloodRequestState();
 }
 
-class _RegisterState extends State<Register> {
-  final AuthService _auth = AuthService();
+class _NewBloodRequestState extends State<NewBloodRequest> {
   final _formKey = GlobalKey<FormState>();
-  final donorRef = FirebaseFirestore.instance.collection('donor');
-  final userRef = FirebaseFirestore.instance.collection('user');
+  final bldRef = FirebaseFirestore.instance.collection('bloodRequests');
+  // final userRef = FirebaseFirestore.instance.collection('user');
   final FirebaseAuth auth = FirebaseAuth.instance;
+  TextEditingController dateinput = TextEditingController();
 
   //text field state
-  String email = '';
-  String password = '';
   String error = '';
-  String name = '';
+  String pName = '';
+  String cName = '';
   String location = '';
   String phoneNumber = '';
   String dropdownDistrict = 'Achham';
   String dropdownGender = 'Male';
   String dropdownGroup = 'A+';
+  String bldAmt = '';
+  String pCase = '';
 
   bool? checkedValue = false;
 
@@ -133,18 +135,9 @@ class _RegisterState extends State<Register> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.red,
+        backgroundColor: Color.fromARGB(255, 173, 45, 45),
         elevation: 0.0,
-        title: const Text('Register to Bloodify'),
-        actions: <Widget>[
-          FlatButton.icon(
-            icon: Icon(Icons.person),
-            label: Text('Sign In'),
-            onPressed: () {
-              widget.toggleView();
-            },
-          )
-        ],
+        title: const Text('Create new blood request'),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -160,24 +153,47 @@ class _RegisterState extends State<Register> {
                   ),
                   TextFormField(
                     decoration: const InputDecoration(
-                        hintText: 'Enter your full name',
-                        labelText: 'Full Name',
+                        hintText: 'Enter patient name',
+                        labelText: 'Patient Name',
                         floatingLabelStyle: TextStyle(color: Colors.red),
                         border: OutlineInputBorder(),
                         focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.red))),
                     validator: (value) {
                       if (value!.isEmpty) {
-                        return 'Enter your name';
+                        return 'Enter patient name';
                       }
                       if (value.split(" ").length == 1) {
-                        return 'Enter your full name';
+                        return 'Enter patient\'s full name';
                       }
                       return null;
                     },
                     onChanged: (val) {
                       setState(() {
-                        name = val;
+                        pName = val;
+                      });
+                    },
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  TextFormField(
+                    decoration: const InputDecoration(
+                        hintText: 'Enter patient\'s health issue',
+                        labelText: 'Patient\'s illness',
+                        floatingLabelStyle: TextStyle(color: Colors.red),
+                        border: OutlineInputBorder(),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.red))),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Enter patient\'s health issue';
+                      }
+                      return null;
+                    },
+                    onChanged: (val) {
+                      setState(() {
+                        pCase = val;
                       });
                     },
                   ),
@@ -185,27 +201,30 @@ class _RegisterState extends State<Register> {
                     height: 10.0,
                   ),
                   TextFormField(
-                    decoration: const InputDecoration(
-                        hintText: 'Enter your email address',
-                        labelText: 'Email',
-                        floatingLabelStyle: TextStyle(color: Colors.red),
-                        border: OutlineInputBorder(),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.red))),
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    decoration: InputDecoration(
+                      floatingLabelStyle: TextStyle(color: Colors.red),
+                      border: OutlineInputBorder(),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.red)),
+                      labelText: "Required Blood Amount",
+                      hintText: 'Enter required blood amount',
+                    ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return 'Please enter your email address';
+                        return 'Please enter required blood amount';
                       }
-                      // Check if the entered email has the right format
-                      if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
-                        return 'Please enter a valid email address';
+                      // Check if the entered mobile number has the right format
+                      if (value == '0') {
+                        return 'Required blood amount can\'t be zero';
                       }
-                      // Return null if the entered email is valid
+                      // Return null if the entered mobile number is valid
                       return null;
                     },
                     onChanged: (val) {
                       setState(() {
-                        email = val;
+                        bldAmt = val;
                       });
                     },
                   ),
@@ -216,15 +235,15 @@ class _RegisterState extends State<Register> {
                     keyboardType: TextInputType.number,
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     decoration: const InputDecoration(
-                        hintText: 'Enter your phone number',
-                        labelText: 'Phone number',
+                        hintText: 'Enter your contact number',
+                        labelText: 'Contact number',
                         floatingLabelStyle: TextStyle(color: Colors.red),
                         border: OutlineInputBorder(),
                         focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.red))),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return 'Please enter your mobile number';
+                        return 'Please enter your contact number';
                       }
                       // Check if the entered mobile number has the right format
                       if (value.length != 10) {
@@ -248,27 +267,25 @@ class _RegisterState extends State<Register> {
                     height: 10.0,
                   ),
                   TextFormField(
-                    obscureText: true,
                     decoration: const InputDecoration(
-                        hintText: 'Password',
-                        labelText: 'Password',
+                        hintText: 'Enter your name',
+                        labelText: 'Your Name',
                         floatingLabelStyle: TextStyle(color: Colors.red),
                         border: OutlineInputBorder(),
                         focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.red))),
                     validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return 'This field is required';
+                      if (value!.isEmpty) {
+                        return 'Enter your name';
                       }
-                      if (value.trim().length < 6) {
-                        return 'Password must be at least 6 characters in length';
+                      if (value.split(" ").length == 1) {
+                        return 'Enter your full name';
                       }
-                      // Return null if the entered password is valid
                       return null;
                     },
-                    onChanged: (value) {
+                    onChanged: (val) {
                       setState(() {
-                        password = value;
+                        cName = val;
                       });
                     },
                   ),
@@ -277,7 +294,7 @@ class _RegisterState extends State<Register> {
                   ),
                   TextFormField(
                     decoration: const InputDecoration(
-                        hintText: 'Enter your location',
+                        hintText: 'Enter patient\'s location',
                         labelText: 'Location',
                         floatingLabelStyle: TextStyle(color: Colors.red),
                         border: OutlineInputBorder(),
@@ -295,12 +312,57 @@ class _RegisterState extends State<Register> {
                       });
                     },
                   ),
-                  SizedBox(height: 20.0),
+                  const SizedBox(
+                    height: 10.0,
+                  ),
+                  TextField(
+                    controller:
+                        dateinput, //editing controller of this TextField
+                    decoration: const InputDecoration(
+                        floatingLabelStyle: TextStyle(color: Colors.red),
+                        border: OutlineInputBorder(),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.red)),
+                        icon: Icon(
+                          Icons.calendar_today,
+                          color: Colors.red,
+                        ), //icon of text field
+                        labelText: "Enter Date" //label text of field
+                        ),
+                    readOnly:
+                        true, //set it true, so that user will not able to edit text
+                    onTap: () async {
+                      DateTime? pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime
+                              .now(), //DateTime.now() - not to allow to choose before today.
+                          lastDate: DateTime(2101));
+
+                      if (pickedDate != null) {
+                        print(
+                            pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
+                        String formattedDate =
+                            DateFormat('yyyy-MM-dd').format(pickedDate);
+                        print(
+                            formattedDate); //formatted date output using intl package =>  2021-03-16
+                        //you can implement different kind of Date Format here according to your requirement
+
+                        setState(() {
+                          dateinput.text =
+                              formattedDate; //set output date to TextField value.
+                        });
+                      } else {
+                        print("Date is not selected");
+                      }
+                    },
+                  ),
+                  SizedBox(height: 10.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Select your district    ',
+                        'Select the district    ',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
@@ -335,42 +397,7 @@ class _RegisterState extends State<Register> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Select your gender    ',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                      DropdownButton(
-                        // Initial Value
-                        value: dropdownGender,
-
-                        // Down Arrow Icon
-                        icon: const Icon(Icons.keyboard_arrow_down),
-
-                        // Array list of items
-                        items: itemss.map((String itemss) {
-                          return DropdownMenuItem(
-                            value: itemss,
-                            child: Text(itemss),
-                          );
-                        }).toList(),
-                        // After selecting the desired option,it will
-                        // change button value to selected value
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            dropdownGender = newValue!;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 5.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Select your blood group         ',
+                        'Select required blood group         ',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
@@ -400,38 +427,6 @@ class _RegisterState extends State<Register> {
                       ),
                     ],
                   ),
-                  // Row(
-                  //   children: <Widget>[
-                  //     SizedBox(
-                  //       width: 10,
-                  //     ), //SizedBox
-                  //     Text(
-                  //       'Library Implementation Of Searching Algorithm: ',
-                  //       style: TextStyle(fontSize: 17.0),
-                  //     ), //Text
-                  //     SizedBox(width: 10), //SizedBox
-                  //     /** Checkbox Widget **/
-                  //     Checkbox(
-                  //       value: this.value,
-                  //       onChanged: (bool value) {
-                  //         setState(() {
-                  //           this.value = value;
-                  //         });
-                  //       },
-                  //     ), //Checkbox
-                  //   ], //<Widget>[]
-                  // ),
-                  CheckboxListTile(
-                    title: Text("Sign up as a donor"),
-                    value: checkedValue,
-                    onChanged: (newValue) {
-                      setState(() {
-                        checkedValue = newValue;
-                      });
-                    },
-                    controlAffinity: ListTileControlAffinity
-                        .leading, //  <-- leading Checkbox
-                  ),
                   SizedBox(height: 20.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -441,7 +436,7 @@ class _RegisterState extends State<Register> {
                         width: 250,
                         child: ElevatedButton(
                           //color: Colors.red,
-                          child: Text("Register".toUpperCase(),
+                          child: Text("create a request".toUpperCase(),
                               style: TextStyle(fontSize: 14)),
                           style: ElevatedButton.styleFrom(
                             primary: Colors.red,
@@ -453,44 +448,38 @@ class _RegisterState extends State<Register> {
                           ),
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
-                              dynamic result =
-                                  await _auth.registerWithEmailAndPassword(
-                                      email, password);
+                              //dynamic result;
+                              //  =
+                              //     await _auth.registerWithEmailAndPassword(
+                              //         email, password);
                               final User? cuser = auth.currentUser;
                               final uid = cuser?.uid;
-                              if (checkedValue == true) {
-                                donorRef.doc(uid).set({
-                                  "id": uid,
-                                  "displayName": name,
-                                  "location": location,
-                                  "phoneNumber": phoneNumber,
-                                  "bloodGroup": dropdownGroup,
-                                  'gender': dropdownGender,
-                                  'district': dropdownDistrict,
-                                });
-                              }
-                              userRef.doc(uid).set({
+                              // if (checkedValue == true) {
+                              //   donorRef.doc(uid).set({
+                              //     "id": uid,
+                              //     "displayName": name,
+                              //     "location": location,
+                              //     "phoneNumber": phoneNumber,
+                              //     "bloodGroup": dropdownGroup,
+                              //     'gender': dropdownGender,
+                              //     'district': dropdownDistrict,
+                              //   });
+                              // }
+                              bldRef.doc(generateRandomString()).set({
                                 "id": uid,
-                                "displayName": name,
+                                "patientName": pName,
                                 "location": location,
+                                "case": pCase,
                                 "phoneNumber": phoneNumber,
                                 "bloodGroup": dropdownGroup,
-                                'gender': dropdownGender,
+                                'contactName': cName,
+                                'requiredAmt': bldAmt,
                                 'district': dropdownDistrict,
+                                'timestamp': dateinput.text,
                               });
-                              if (result == null) {
-                                setState(() {
-                                  error = 'Please enter valid details';
-                                });
-                              }
+                              print(dateinput);
+                              Navigator.pop(context);
                             }
-                            // final bool?
-                            // dynamic result = await _auth.registerWithEmailAndPassword(email, password);
-                            // isValid = _formKey.currentState?.validate();
-                            // if (isValid == true) {
-                            //   print(email);
-                            //   print(password);
-                            // }
                           },
                         ),
                       ),
@@ -508,5 +497,13 @@ class _RegisterState extends State<Register> {
             )),
       ),
     );
+  }
+
+  String generateRandomString() {
+    var r = Random();
+    const _chars =
+        'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+    return List.generate(15, (index) => _chars[r.nextInt(_chars.length)])
+        .join();
   }
 }

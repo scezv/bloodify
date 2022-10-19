@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
       initialData: null,
       value: AuthService().user,
       child: MaterialApp(
-        home: Wrapper(),
+        home: SplashScreen(),
       ),
     );
   }
