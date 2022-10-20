@@ -14,8 +14,24 @@ class BloodRequestScreen extends StatefulWidget {
   State<BloodRequestScreen> createState() => _BloodRequestScreenState();
 }
 
+//String _url = 'tel:1234567890';
+
 class _BloodRequestScreenState extends State<BloodRequestScreen> {
   FirebaseAuth auth = FirebaseAuth.instance;
+  Future<void>? _launched;
+  bool _hasCallSupport = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Check for phone call support.
+    canLaunchUrl(Uri(scheme: 'tel', path: '123')).then((bool result) {
+      setState(() {
+        _hasCallSupport = result;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,6 +75,8 @@ class _BloodRequestScreenState extends State<BloodRequestScreen> {
                 children: snapshot.data!.docs.map((doc) {
                   String pName = doc['patientName'];
                   String bldGrp = doc['bloodGroup'];
+                  // String phoneNumberr = doc['phoneNumber'];
+                  // _url = 'tel:$phoneNumber';
                   return Card(
                       child: Padding(
                           padding: const EdgeInsets.all(16.0),
@@ -103,6 +121,7 @@ class _BloodRequestScreenState extends State<BloodRequestScreen> {
                                                 style: const TextStyle(
                                                     decoration: TextDecoration
                                                         .underline,
+                                                    fontWeight: FontWeight.bold,
                                                     color: Colors.black,
                                                     fontSize: 18),
                                                 recognizer:
@@ -160,6 +179,29 @@ class _BloodRequestScreenState extends State<BloodRequestScreen> {
                                         text: TextSpan(
                                             text: doc['requiredAmt'] +
                                                 ' pint / pints',
+                                            style: const TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 16),
+                                            recognizer: TapGestureRecognizer()
+                                              ..onTap = () {
+                                                // navigate to desired screen
+                                              })),
+                                  ],
+                                ),
+                                const SizedBox(height: 5.0),
+                                Row(
+                                  children: [
+                                    RichText(
+                                        text: const TextSpan(
+                                      text: 'Required Location:    ',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                          fontSize: 16),
+                                    )),
+                                    RichText(
+                                        text: TextSpan(
+                                            text: doc['location'],
                                             style: const TextStyle(
                                                 color: Colors.black,
                                                 fontSize: 16),
@@ -245,12 +287,47 @@ class _BloodRequestScreenState extends State<BloodRequestScreen> {
                                 ),
                                 Row(
                                   children: [
-                                    Center(
-                                      child: new FlatButton(
-                                          onPressed: () =>
-                                              launch("tel://21213123123"),
-                                          child: new Text("Call me")),
+                                    Row(
+                                      children: [
+                                        Center(
+                                            child: ElevatedButton.icon(
+                                          onPressed: () => setState(() {
+                                            _launched = _makePhoneCall(
+                                                doc['phoneNumber']);
+                                          }),
+                                          icon: Icon(Icons.call),
+                                          label: Text('Call   '),
+                                          style: ElevatedButton.styleFrom(
+                                            primary: Color.fromARGB(
+                                                255, 170, 57, 48),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 2, vertical: 2),
+                                          ),
+                                        )),
+                                      ],
                                     ),
+                                    SizedBox(
+                                      width: 5.0,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Center(
+                                            child: ElevatedButton.icon(
+                                          onPressed: () => setState(() {
+                                            _launched =
+                                                _makeSMS(doc['phoneNumber']);
+                                          }),
+                                          icon: Icon(Icons.message),
+                                          label: Text('SMS   '),
+                                          style: ElevatedButton.styleFrom(
+                                            primary: Color.fromARGB(
+                                                255, 170, 57, 48),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 2, vertical: 2),
+                                          ),
+                                        )),
+                                      ],
+                                    )
                                   ],
                                 )
                                 // Text('Name ' + pName),
@@ -284,5 +361,21 @@ class _BloodRequestScreenState extends State<BloodRequestScreen> {
             // }).toList(),
           }),
         ));
+  }
+
+  Future<void> _makePhoneCall(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    await launchUrl(launchUri);
+  }
+
+  Future<void> _makeSMS(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'sms',
+      path: phoneNumber,
+    );
+    await launchUrl(launchUri);
   }
 }
