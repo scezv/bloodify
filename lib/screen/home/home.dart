@@ -1,7 +1,7 @@
 import 'package:bloodify/screen/home/blood_requests.dart';
 import 'package:bloodify/screen/home/main_screen.dart';
 import 'package:bloodify/screen/home/privacy_policy.dart';
-import 'package:bloodify/screen/home/profile.dart';
+import 'package:bloodify/screen/home/events_screen.dart';
 import 'package:bloodify/screen/home/settings.dart';
 import 'package:bloodify/services/auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -99,7 +99,7 @@ class Home extends StatelessWidget {
                 body: TabBarView(children: [
                   MainScreen(),
                   BloodRequestScreen(),
-                  ProfileScreen(),
+                  EventsScreen(),
                 ]),
               )
             ],
