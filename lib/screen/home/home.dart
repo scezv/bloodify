@@ -82,10 +82,10 @@ class Home extends StatelessWidget {
                         icon: Icon(Icons.house_rounded),
                       ),
                       Tab(
-                        icon: Icon(Icons.person_add),
+                        icon: Icon(Icons.bloodtype),
                       ),
                       Tab(
-                        icon: Icon(Icons.panorama_fisheye_outlined),
+                        icon: Icon(Icons.event),
                       ),
                     ],
                     labelColor: Colors.red,

@@ -1,4 +1,5 @@
 import 'package:bloodify/screen/home/create_new_event.dart';
+import 'package:bloodify/screen/home/event_details.dart';
 import 'package:bloodify/services/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
@@ -244,53 +245,85 @@ class _EventsScreenState extends State<EventsScreen> {
                                   ],
                                 ),
                                 SizedBox(
+                                  height: 10,
+                                ),
+                                Center(
+                                  child: Image.asset(
+                                    'assets/img/blood.png',
+                                    height: 150,
+                                  ),
+                                ),
+                                const SizedBox(
                                   height: 5.0,
                                 ),
-                                Row(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Center(
-                                            child: ElevatedButton.icon(
-                                          onPressed: () => setState(() {
-                                            _launched = _makePhoneCall(
-                                                doc['phoneNumber']);
-                                          }),
-                                          icon: Icon(Icons.call),
-                                          label: Text('Call   '),
-                                          style: ElevatedButton.styleFrom(
-                                            primary: Color.fromARGB(
-                                                255, 170, 57, 48),
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 2, vertical: 2),
-                                          ),
-                                        )),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      width: 5.0,
-                                    ),
-                                    Row(
-                                      children: [
-                                        Center(
-                                            child: ElevatedButton.icon(
-                                          onPressed: () => setState(() {
-                                            _launched =
-                                                _makeSMS(doc['phoneNumber']);
-                                          }),
-                                          icon: Icon(Icons.message),
-                                          label: Text('SMS   '),
-                                          style: ElevatedButton.styleFrom(
-                                            primary: Color.fromARGB(
-                                                255, 170, 57, 48),
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 2, vertical: 2),
-                                          ),
-                                        )),
-                                      ],
-                                    )
-                                  ],
-                                )
+                                ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => EventDetailsPage(
+                                            doc['district'],
+                                            doc['eventName'],
+                                            doc['eventDesc'],
+                                            doc['location'],
+                                            doc['organizerName'],
+                                            doc['phoneNumber'],
+                                            doc['timestamp']),
+                                      ),
+                                    );
+                                  },
+                                  child: const Text('View Details'),
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Color.fromARGB(255, 170, 57, 48),
+                                    // padding: EdgeInsets.symmetric(
+                                    //     horizontal: 2, vertical: 2),
+                                  ),
+                                ),
+                                // Row(
+                                //   children: [
+                                //     Row(
+                                //       children: [
+                                //         Center(
+                                //             child: ElevatedButton.icon(
+                                //           onPressed: () => setState(() {
+                                //             _launched = _makePhoneCall(
+                                //                 doc['phoneNumber']);
+                                //           }),
+                                //           icon: Icon(Icons.call),
+                                //           label: Text('Call   '),
+                                //           style: ElevatedButton.styleFrom(
+                                //             primary: Color.fromARGB(
+                                //                 255, 170, 57, 48),
+                                //             padding: EdgeInsets.symmetric(
+                                //                 horizontal: 2, vertical: 2),
+                                //           ),
+                                //         )),
+                                //       ],
+                                //     ),
+                                //     SizedBox(
+                                //       width: 5.0,
+                                //     ),
+                                //     Row(
+                                //       children: [
+                                //         Center(
+                                //             child: ElevatedButton.icon(
+                                //           onPressed: () => setState(() {
+                                //             _launched =
+                                //                 _makeSMS(doc['phoneNumber']);
+                                //           }),
+                                //           icon: Icon(Icons.message),
+                                //           label: Text('SMS   '),
+                                //           style: ElevatedButton.styleFrom(
+                                //             primary: Color.fromARGB(
+                                //                 255, 170, 57, 48),
+                                //             padding: EdgeInsets.symmetric(
+                                //                 horizontal: 2, vertical: 2),
+                                //           ),
+                                //         )),
+                                //       ],
+                                //     )
+                                //   ],
+                                // )
                                 // Text('Name ' + pName),
                                 // Text(
                                 //   'Physics',
