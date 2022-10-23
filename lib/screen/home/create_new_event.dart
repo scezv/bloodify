@@ -19,6 +19,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   // final userRef = FirebaseFirestore.instance.collection('user');
   final FirebaseAuth auth = FirebaseAuth.instance;
   TextEditingController dateinput = TextEditingController();
+  TextEditingController timeinput = TextEditingController();
 
   //text field state
   String error = '';
@@ -111,6 +112,10 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     "Terhathum",
     "Udayapur",
   ];
+
+  String? _hour, _minute, _time;
+  String? dateTime;
+  DateTime selectedDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -272,20 +277,21 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                   const SizedBox(
                     height: 10.0,
                   ),
-                  TextField(
+                  TextFormField(
                     controller:
                         dateinput, //editing controller of this TextField
                     decoration: const InputDecoration(
-                        floatingLabelStyle: TextStyle(color: Colors.red),
-                        border: OutlineInputBorder(),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.red)),
-                        icon: Icon(
-                          Icons.calendar_today,
-                          color: Colors.red,
-                        ), //icon of text field
-                        labelText: "Enter Date" //label text of field
-                        ),
+                      floatingLabelStyle: TextStyle(color: Colors.red),
+                      border: OutlineInputBorder(),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.red)),
+                      icon: Icon(
+                        Icons.calendar_today,
+                        color: Colors.red,
+                      ), //icon of text field
+                      labelText: "Enter Date", //label text of field
+                      //errorText: _validateDate ? 'Value Can\'t Be Empty' : null,
+                    ),
                     readOnly:
                         true, //set it true, so that user will not able to edit text
                     onTap: () async {
@@ -306,12 +312,83 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                         //you can implement different kind of Date Format here according to your requirement
 
                         setState(() {
-                          dateinput.text =
-                              formattedDate; //set output date to TextField value.
+                          dateinput.text = formattedDate;
+                          //set output date to TextField value.
                         });
                       } else {
                         print("Date is not selected");
                       }
+                    },
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "Date is required";
+                      }
+                      print(value);
+                      return null;
+                    },
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    controller:
+                        timeinput, //editing controller of this TextField
+                    decoration: const InputDecoration(
+                        floatingLabelStyle: TextStyle(color: Colors.red),
+                        border: OutlineInputBorder(),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.red)),
+                        icon: Icon(
+                          Icons.lock_clock,
+                          color: Colors.red,
+                        ), //icon of text field
+                        labelText: "Enter Time" //label text of field
+                        ),
+                    readOnly:
+                        true, //set it true, so that user will not able to edit text
+                    onTap: () async {
+                      TimeOfDay? pickedTime = await showTimePicker(
+                        context: context,
+                        initialTime: TimeOfDay(hour: 08, minute: 00),
+                      );
+                      if (pickedTime != null) {
+                        print(pickedTime);
+                        String _hou = pickedTime.hour.toString();
+                        int hour = int.parse(_hou);
+                        _minute = pickedTime.minute.toString();
+                        String _min = pickedTime.minute.toString();
+                        int min = int.parse(_min);
+                        String ampm = 'AM';
+                        if (hour > 12) {
+                          hour = hour - 12;
+                          ampm = 'PM';
+                        } else {
+                          ampm = 'AM';
+                        }
+                        if (hour == 12) {
+                          hour = 12;
+                          ampm = 'PM';
+                        }
+                        if (hour == 0) {
+                          hour = 12;
+                          ampm = 'AM';
+                        }
+                        String formattedTime = "$hour:$min $ampm";
+                        print(formattedTime);
+                        setState(() {
+                          timeinput.text =
+                              formattedTime; //set output date to TextField value.
+                        });
+                      } else {
+                        print("Time is not selected");
+                      }
+                    },
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "Time is required";
+                      }
+                      print(value);
+                      return null;
                     },
                   ),
                   SizedBox(height: 10.0),
@@ -395,7 +472,9 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                 "phoneNumber": phoneNumber,
                                 'organizerName': oName,
                                 'district': dropdownDistrict,
-                                'timestamp': dateinput.text,
+                                'datestamp': dateinput.text,
+                                'timestamp': timeinput.text,
+                                'date': DateTime.now(),
                               });
                               print(dateinput);
                               Navigator.pop(context);

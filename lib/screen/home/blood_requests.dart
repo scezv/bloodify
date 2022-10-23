@@ -68,6 +68,7 @@ class _BloodRequestScreenState extends State<BloodRequestScreen> {
         body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
           stream: FirebaseFirestore.instance
               .collection('bloodRequests')
+              .orderBy("date", descending: true)
               .snapshots(),
           builder: ((context, snapshot) {
             if (snapshot.hasData) {
@@ -75,6 +76,7 @@ class _BloodRequestScreenState extends State<BloodRequestScreen> {
                 children: snapshot.data!.docs.map((doc) {
                   String pName = doc['patientName'];
                   String bldGrp = doc['bloodGroup'];
+                  //print("${doc['time'].toDate()}");
                   // String phoneNumberr = doc['phoneNumber'];
                   // _url = 'tel:$phoneNumber';
                   return Card(
@@ -224,7 +226,8 @@ class _BloodRequestScreenState extends State<BloodRequestScreen> {
                                     )),
                                     RichText(
                                         text: TextSpan(
-                                            text: doc['timestamp'],
+                                            text:
+                                                "${doc['datestamp']} on ${doc['timestamp']}",
                                             style: const TextStyle(
                                                 color: Colors.black,
                                                 fontSize: 16),

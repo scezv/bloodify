@@ -65,7 +65,10 @@ class _EventsScreenState extends State<EventsScreen> {
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-          stream: FirebaseFirestore.instance.collection('events').snapshots(),
+          stream: FirebaseFirestore.instance
+              .collection('events')
+              .orderBy("date", descending: true)
+              .snapshots(),
           builder: ((context, snapshot) {
             if (snapshot.hasData) {
               return ListView(
@@ -186,7 +189,8 @@ class _EventsScreenState extends State<EventsScreen> {
                                     )),
                                     RichText(
                                         text: TextSpan(
-                                            text: doc['timestamp'],
+                                            text:
+                                                "${doc['datestamp']} on ${doc['timestamp']}",
                                             style: const TextStyle(
                                                 color: Colors.black,
                                                 fontSize: 16),
@@ -268,6 +272,7 @@ class _EventsScreenState extends State<EventsScreen> {
                                             doc['location'],
                                             doc['organizerName'],
                                             doc['phoneNumber'],
+                                            doc['datestamp'],
                                             doc['timestamp']),
                                       ),
                                     );

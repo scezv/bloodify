@@ -9,10 +9,11 @@ class EventDetailsPage extends StatefulWidget {
       location,
       organizerName,
       phoneNumber,
+      datestamp,
       timestamp;
 
   EventDetailsPage(this.district, this.eventName, this.eventDesc, this.location,
-      this.organizerName, this.phoneNumber, this.timestamp);
+      this.organizerName, this.phoneNumber, this.datestamp, this.timestamp);
 
   @override
   State<EventDetailsPage> createState() => _EventDetailsPageState();
@@ -83,7 +84,7 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
                 width: 5.0,
               ),
               Text(
-                widget.timestamp,
+                widget.datestamp + ' on ' + widget.timestamp,
                 style: const TextStyle(
                     fontWeight: FontWeight.w500,
                     //color: Color.fromARGB(255, 170, 57, 48),
