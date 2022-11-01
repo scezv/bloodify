@@ -1,4 +1,5 @@
 import 'package:bloodify/models/user.dart';
+import 'package:bloodify/screen/home/globals.dart';
 import 'package:bloodify/screen/wrapper.dart';
 import 'package:bloodify/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
       value: AuthService().user,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
+        scaffoldMessengerKey: snackbarKey,
         home: SplashScreen(),
       ),
     );

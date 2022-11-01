@@ -1,5 +1,7 @@
 import 'package:bloodify/models/user.dart';
+import 'package:bloodify/screen/home/globals.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -38,7 +40,15 @@ class AuthService {
       User? user = result.user;
       return _userFromFirebase(user);
     } on FirebaseAuthException catch (e) {
-      //print(e.code);
+      if (e.message ==
+          'There is no user record corresponding to this identifier. The user may have been deleted.') {
+        final SnackBar snackBar =
+            SnackBar(content: Text("No user with this email"));
+        snackbarKey.currentState?.showSnackBar(snackBar);
+      } else {
+        final SnackBar snackBar = SnackBar(content: Text("${e.message}"));
+        snackbarKey.currentState?.showSnackBar(snackBar);
+      }
       return null;
     }
   }
@@ -49,11 +59,13 @@ class AuthService {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
-      print('user created');
+      //print('user created');
       User? user = result.user;
       return _userFromFirebase(user);
     } on FirebaseAuthException catch (e) {
-      print(e.message);
+      //print(e.message);
+      final SnackBar snackBar = SnackBar(content: Text("${e.message}"));
+      snackbarKey.currentState?.showSnackBar(snackBar);
       return null;
     }
   }
@@ -62,8 +74,10 @@ class AuthService {
   Future signOut() async {
     try {
       return await _auth.signOut();
-      print('user signed out');
+      //print('user signed out');
     } on FirebaseAuthException catch (e) {
+      final SnackBar snackBar = SnackBar(content: Text("${e.message}"));
+      snackbarKey.currentState?.showSnackBar(snackBar);
       return null;
     }
   }
@@ -73,10 +87,20 @@ class AuthService {
     print(email);
     try {
       await _auth.sendPasswordResetEmail(email: email);
+      final SnackBar snackBar = SnackBar(content: Text("Reset e-mail sent"));
+      snackbarKey.currentState?.showSnackBar(snackBar);
     } on FirebaseAuthException catch (e) {
-      print(e.code);
-      print(e.message);
-// show the snackbar here
+      //print(e.code);
+      //print(e.message);
+      if (e.message ==
+          'There is no user record corresponding to this identifier. The user may have been deleted.') {
+        final SnackBar snackBar =
+            SnackBar(content: Text("No user with this email"));
+        snackbarKey.currentState?.showSnackBar(snackBar);
+      } else {
+        final SnackBar snackBar = SnackBar(content: Text("${e.message}"));
+        snackbarKey.currentState?.showSnackBar(snackBar);
+      }
     }
   }
 }

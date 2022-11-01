@@ -6,8 +6,6 @@ import 'package:bloodify/screen/home/settings.dart';
 import 'package:bloodify/services/auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 class Home extends StatelessWidget {
   final AuthService _auth = AuthService();

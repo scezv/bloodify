@@ -145,9 +145,19 @@ class _SignInState extends State<SignIn> {
                             _auth.signInWithEmailAndPassword(email, password);
                         print('result is $result');
                         if (result == null) {
-                          setState(() {
-                            error = 'Sign in failed with these credentials';
-                          });
+                          final snackBar = SnackBar(
+                            content: const Text('Yay! A SnackBar!'),
+                            action: SnackBarAction(
+                              label: 'Undo',
+                              onPressed: () {
+                                // Some code to undo the change.
+                              },
+                            ),
+                          );
+
+                          // Find the ScaffoldMessenger in the widget tree
+                          // and use it to show a SnackBar.
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         }
                       }
                     },

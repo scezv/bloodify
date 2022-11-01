@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:bloodify/screen/home/globals.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -37,16 +38,7 @@ class _NewBloodRequestState extends State<NewBloodRequest> {
 
   bool? checkedValue = false;
 
-  var group = [
-    'A+',
-    'A-',
-    'B+',
-    'B-',
-    'O+',
-    'O-',
-    'AB+',
-    'AB-',
-  ];
+  var group = Global.group;
 
   // List of items in our dropdown menu
   var itemss = [
@@ -55,83 +47,7 @@ class _NewBloodRequestState extends State<NewBloodRequest> {
     'Prefer not to say',
   ];
 
-  var items = [
-    "Achham",
-    "Arghakhanchi",
-    "Baglung",
-    "Baitadi",
-    "Bajhang",
-    "Bajura",
-    "Banke",
-    "Bara",
-    "Bardiya",
-    "Bhaktapur",
-    "Bhojpur",
-    "Chitwan",
-    "Dadeldhura",
-    "Dailekh",
-    "Dang deukhuri",
-    "Darchula",
-    "Dhading",
-    "Dhankuta",
-    "Dhanusa",
-    "Dholkha",
-    "Dolpa",
-    "Doti",
-    "Gorkha",
-    "Gulmi",
-    "Humla",
-    "Ilam",
-    "Jajarkot",
-    "Jhapa",
-    "Jumla",
-    "Kailali",
-    "Kalikot",
-    "Kanchanpur",
-    "Kapilvastu",
-    "Kaski",
-    "Kathmandu",
-    "Kavrepalanchok",
-    "Khotang",
-    "Lalitpur",
-    "Lamjung",
-    "Mahottari",
-    "Makwanpur",
-    "Manang",
-    "Morang",
-    "Mugu",
-    "Mustang",
-    "Myagdi",
-    "Nawalparasi",
-    "Nuwakot",
-    "Okhaldhunga",
-    "Palpa",
-    "Panchthar",
-    "Parbat",
-    "Parsa",
-    "Pyuthan",
-    "Ramechhap",
-    "Rasuwa",
-    "Rautahat",
-    "Rolpa",
-    "Rukum",
-    "Rupandehi",
-    "Salyan",
-    "Sankhuwasabha",
-    "Saptari",
-    "Sarlahi",
-    "Sindhuli",
-    "Sindhupalchok",
-    "Siraha",
-    "Solukhumbu",
-    "Sunsari",
-    "Surkhet",
-    "Syangja",
-    "Tanahu",
-    "Taplejung",
-    "Terhathum",
-    "Udayapur",
-  ];
+  var items = Global.districts;
 
   @override
   Widget build(BuildContext context) {

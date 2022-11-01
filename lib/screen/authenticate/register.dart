@@ -459,14 +459,8 @@ class _RegisterState extends State<Register> {
                               final User? cuser = auth.currentUser;
                               final uid = cuser?.uid;
                               if (checkedValue == true) {
-                                donorRef.doc(uid).set({
-                                  "id": uid,
-                                  "displayName": name,
-                                  "location": location,
-                                  "phoneNumber": phoneNumber,
-                                  "bloodGroup": dropdownGroup,
-                                  'gender': dropdownGender,
-                                  'district': dropdownDistrict,
+                                userRef.doc(uid).set({
+                                  'donor': true,
                                 });
                               }
                               userRef.doc(uid).set({
