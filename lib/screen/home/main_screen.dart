@@ -1,4 +1,5 @@
 import 'package:bloodify/screen/home/globals.dart';
+import 'package:bloodify/screen/home/home.dart';
 import 'package:bloodify/screen/home/show_donors.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -17,6 +18,9 @@ class _MainScreenState extends State<MainScreen> {
     'Male',
     'Female',
   ];
+
+  final Home home = new Home();
+
   var districts = Global.districts;
 
   var bloodGroups = Global.group;
@@ -32,72 +36,42 @@ class _MainScreenState extends State<MainScreen> {
     final User? user = auth.currentUser;
     return Scaffold(
         appBar: AppBar(
-          title: Text('Bloodify'),
-          backgroundColor: Color.fromARGB(255, 173, 45, 45),
-          elevation: 0.0,
-          actions: <Widget>[
-            FlatButton.icon(
-              icon: Icon(Icons.logout),
-              onPressed: () async {
-                await auth.signOut();
-              },
-              label: Text('Sign Out'),
-            )
+          backgroundColor: Color.fromARGB(255, 170, 57, 48),
+          centerTitle: false,
+          title: Text("Bloodify"),
+          actions: [
+            Theme(
+              data: Theme.of(context).copyWith(
+                  textTheme: TextTheme().apply(bodyColor: Colors.black),
+                  dividerColor: Colors.white,
+                  iconTheme: IconThemeData(color: Colors.white)),
+              child: PopupMenuButton<int>(
+                color: Colors.black,
+                itemBuilder: (context) => [
+                  PopupMenuItem<int>(value: 0, child: Text("Settings")),
+                  PopupMenuItem<int>(
+                      value: 1, child: Text("Privacy Policy    ")),
+                  PopupMenuDivider(),
+                  PopupMenuItem<int>(
+                      value: 2,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.logout,
+                            color: Colors.redAccent,
+                          ),
+                          const SizedBox(
+                            width: 7,
+                          ),
+                          Text("Logout")
+                        ],
+                      )),
+                ],
+                onSelected: (item) => home.SelectedItem(context, item),
+              ),
+            ),
           ],
         ),
-        //backgroundColor: C,
-        //floatingActionButton: null,
-        // body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-        //   stream: FirebaseFirestore.instance.collection('user')
-        //   .where('donor', isEqualTo: true).snapshots(),
-        //   builder: ((context, snapshot) {
-        //     if (snapshot.hasData) {
-        //       return ListView(
-        //         // children: snapshot.data!.docs.map((doc) {
-        //         //   return Card(
-        //         //     child: ListTile(
-        //         //       title: Text(doc['displayName']),
-        //         //     ),
-        //         //   );
-        //         // }).toList(),
-        //         children: snapshot.data!.docs.map((doc) {
-        //           return Center(
-        //             child: Container(
-        //               width: MediaQuery.of(context).size.width / 1.2,
-        //               height: MediaQuery.of(context).size.height / 6,
-        //               child: Text('Name ' + doc['displayName']),
-        //             ),
-        //           );
-        //         }).toList(),
-        //       );
-        //     }
-        //     if (snapshot.hasError) {
-        //       return const Text('Error');
-        //     } else {
-        //       print('no data found');
-        //       return const Center(
-        //         child: CircularProgressIndicator(),
-        //       );
-        //     }
-        //     // children: snapshot.data!.docs.map((doc) {
-        //     //   return Card(
-        //     //     child: ListTile(
-        //     //       title: Text(doc['displayName']),
-        //     //     ),
-        //     //   );
-        //     // }).toList(),
-        //     // children: snapshot.data!.docs.map((doc) {
-        //     //   return Center(
-        //     //     child: Container(
-        //     //       width: MediaQuery.of(context).size.width / 1.2,
-        //     //       height: MediaQuery.of(context).size.height / 6,
-        //     //       child: Text('Name' + doc['id']),
-        //     //     ),
-        //     //   );
-        //     // }).toList(),
-        //     //);
-        //   }),
-        // ),
         body: Padding(
           padding: const EdgeInsets.only(left: 16, top: 8, right: 16),
           child: SingleChildScrollView(
@@ -138,7 +112,7 @@ class _MainScreenState extends State<MainScreen> {
                                   const Text(
                                     'Blood Finder',
                                     style: TextStyle(
-                                        color: Colors.redAccent,
+                                        color: Color.fromARGB(255, 170, 57, 48),
                                         fontFamily: 'Roboto',
                                         fontSize: 25,
                                         fontWeight: FontWeight.bold),
@@ -272,35 +246,43 @@ class _MainScreenState extends State<MainScreen> {
                                   //   },
                                   //   child: const Text('Submit Button'),
                                   // ),
-                                  OutlinedButton.icon(
-                                    style: ElevatedButton.styleFrom(
-                                      primary: Color.fromARGB(255, 173, 45, 45),
-                                      elevation: 3,
-                                      onPrimary: Colors.white,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
+                                  SizedBox(
+                                    height: 50,
+                                    width:
+                                        MediaQuery.of(context).size.width / 1.6,
+                                    child: OutlinedButton.icon(
+                                      style: ElevatedButton.styleFrom(
+                                        primary:
+                                            Color.fromARGB(255, 173, 45, 45),
+                                        elevation: 3,
+                                        onPrimary: Colors.white,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                        ),
                                       ),
+                                      onPressed: () {
+                                        if (_formKey.currentState!.validate()) {
+                                          _formKey.currentState!.save();
+                                          print(
+                                              '$selectedValueDistrict $selectedValueBloodGrp');
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => ShowDonors(
+                                                  selectedValueDistrict,
+                                                  selectedValueBloodGrp),
+                                            ),
+                                          );
+                                        } else {}
+                                      },
+                                      icon: Icon(
+                                        // <-- Icon
+                                        Icons.search,
+                                        size: 24.0,
+                                      ),
+                                      label: Text('  SEARCH  '), // <-- Text
                                     ),
-                                    onPressed: () {
-                                      if (_formKey.currentState!.validate()) {
-                                        _formKey.currentState!.save();
-                                        print(
-                                            '$selectedValueDistrict $selectedValueBloodGrp');
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => ShowDonors(selectedValueDistrict, selectedValueBloodGrp),
-                                          ),
-                                        );
-                                      } else {}
-                                    },
-                                    icon: Icon(
-                                      // <-- Icon
-                                      Icons.search,
-                                      size: 24.0,
-                                    ),
-                                    label: Text('  SEARCH  '), // <-- Text
                                   ),
                                   SizedBox(
                                     height: 30,

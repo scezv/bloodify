@@ -13,7 +13,8 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: null, // appBar: AppBar(
+      floatingActionButton: null,
+      // appBar: AppBar(
       //   title: Text('Bloodify'),
       //   backgroundColor: Color.fromARGB(255, 173, 45, 45),
       //   elevation: 0.0,
@@ -105,21 +106,21 @@ class Home extends StatelessWidget {
     );
   }
 
-  // void SelectedItem(BuildContext context, item) {
-  //   switch (item) {
-  //     case 0:
-  //       Navigator.of(context)
-  //           .push(MaterialPageRoute(builder: (context) => SettingsPage()));
-  //       break;
-  //     case 1:
-  //       print("Privacy Clicked");
-  //       Navigator.of(context)
-  //           .push(MaterialPageRoute(builder: (context) => PrivacyPolicyPage()));
-  //       break;
-  //     case 2:
-  //       print("User Logged out");
-  //       _auth.signOut();
-  //       break;
-  //   }
-  // }
+  void SelectedItem(BuildContext context, item) {
+    switch (item) {
+      case 0:
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => SettingsPage()));
+        break;
+      case 1:
+        print("Privacy Clicked");
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => PrivacyPolicyPage()));
+        break;
+      case 2:
+        print("User Logged out");
+        _auth.signOut();
+        break;
+    }
+  }
 }

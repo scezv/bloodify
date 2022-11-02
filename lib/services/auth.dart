@@ -36,8 +36,10 @@ class AuthService {
     try {
       UserCredential result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
-      print('user signed in');
+      //print('user signed in');
       User? user = result.user;
+      final SnackBar snackBar = SnackBar(content: Text("User signed in"));
+      snackbarKey.currentState?.showSnackBar(snackBar);
       return _userFromFirebase(user);
     } on FirebaseAuthException catch (e) {
       if (e.message ==
@@ -61,6 +63,8 @@ class AuthService {
           email: email, password: password);
       //print('user created');
       User? user = result.user;
+      final SnackBar snackBar = SnackBar(content: Text("User registered"));
+      snackbarKey.currentState?.showSnackBar(snackBar);
       return _userFromFirebase(user);
     } on FirebaseAuthException catch (e) {
       //print(e.message);

@@ -1,3 +1,4 @@
+import 'package:bloodify/screen/home/globals.dart';
 import 'package:bloodify/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -32,16 +33,7 @@ class _RegisterState extends State<Register> {
 
   bool? checkedValue = false;
 
-  var group = [
-    'A+',
-    'A-',
-    'B+',
-    'B-',
-    'O+',
-    'O-',
-    'AB+',
-    'AB-',
-  ];
+  var group = Global.group;
 
   // List of items in our dropdown menu
   var itemss = [
@@ -50,99 +42,29 @@ class _RegisterState extends State<Register> {
     'Prefer not to say',
   ];
 
-  var items = [
-    "Achham",
-    "Arghakhanchi",
-    "Baglung",
-    "Baitadi",
-    "Bajhang",
-    "Bajura",
-    "Banke",
-    "Bara",
-    "Bardiya",
-    "Bhaktapur",
-    "Bhojpur",
-    "Chitwan",
-    "Dadeldhura",
-    "Dailekh",
-    "Dang deukhuri",
-    "Darchula",
-    "Dhading",
-    "Dhankuta",
-    "Dhanusa",
-    "Dholkha",
-    "Dolpa",
-    "Doti",
-    "Gorkha",
-    "Gulmi",
-    "Humla",
-    "Ilam",
-    "Jajarkot",
-    "Jhapa",
-    "Jumla",
-    "Kailali",
-    "Kalikot",
-    "Kanchanpur",
-    "Kapilvastu",
-    "Kaski",
-    "Kathmandu",
-    "Kavrepalanchok",
-    "Khotang",
-    "Lalitpur",
-    "Lamjung",
-    "Mahottari",
-    "Makwanpur",
-    "Manang",
-    "Morang",
-    "Mugu",
-    "Mustang",
-    "Myagdi",
-    "Nawalparasi",
-    "Nuwakot",
-    "Okhaldhunga",
-    "Palpa",
-    "Panchthar",
-    "Parbat",
-    "Parsa",
-    "Pyuthan",
-    "Ramechhap",
-    "Rasuwa",
-    "Rautahat",
-    "Rolpa",
-    "Rukum",
-    "Rupandehi",
-    "Salyan",
-    "Sankhuwasabha",
-    "Saptari",
-    "Sarlahi",
-    "Sindhuli",
-    "Sindhupalchok",
-    "Siraha",
-    "Solukhumbu",
-    "Sunsari",
-    "Surkhet",
-    "Syangja",
-    "Tanahu",
-    "Taplejung",
-    "Terhathum",
-    "Udayapur",
-  ];
+  var items = Global.districts;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.red,
+        backgroundColor: Color.fromARGB(255, 170, 57, 48),
         elevation: 0.0,
         title: const Text('Register to Bloodify'),
         actions: <Widget>[
-          FlatButton.icon(
-            icon: Icon(Icons.person),
-            label: Text('Sign In'),
+          TextButton.icon(
             onPressed: () {
               widget.toggleView();
             },
+            icon: Icon(
+              Icons.person,
+              color: Colors.white,
+            ),
+            label: Text(
+              'Sign In',
+              style: TextStyle(color: Colors.white),
+            ),
           )
         ],
       ),
@@ -444,7 +366,7 @@ class _RegisterState extends State<Register> {
                           child: Text("Register".toUpperCase(),
                               style: TextStyle(fontSize: 14)),
                           style: ElevatedButton.styleFrom(
-                            primary: Colors.red,
+                            primary: Color.fromARGB(255, 170, 57, 48),
                             elevation: 3,
                             onPrimary: Colors.white,
                             shape: RoundedRectangleBorder(

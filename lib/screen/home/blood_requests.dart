@@ -1,3 +1,4 @@
+import 'package:bloodify/screen/home/home.dart';
 import 'package:bloodify/screen/home/new_blood_request.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -17,6 +18,8 @@ class BloodRequestScreen extends StatefulWidget {
 //String _url = 'tel:1234567890';
 
 class _BloodRequestScreenState extends State<BloodRequestScreen> {
+  final Home home = new Home();
+
   FirebaseAuth auth = FirebaseAuth.instance;
   Future<void>? _launched;
   bool _hasCallSupport = false;
@@ -36,17 +39,40 @@ class _BloodRequestScreenState extends State<BloodRequestScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Blood Requests'),
-          backgroundColor: Color.fromARGB(255, 173, 45, 45),
-          elevation: 0.0,
-          actions: <Widget>[
-            FlatButton.icon(
-              icon: Icon(Icons.logout),
-              onPressed: () async {
-                await auth.signOut();
-              },
-              label: Text('Sign Out'),
-            )
+          backgroundColor: Color.fromARGB(255, 170, 57, 48),
+          centerTitle: false,
+          title: Text("Blood Requests"),
+          actions: [
+            Theme(
+              data: Theme.of(context).copyWith(
+                  textTheme: TextTheme().apply(bodyColor: Colors.black),
+                  dividerColor: Colors.white,
+                  iconTheme: IconThemeData(color: Colors.white)),
+              child: PopupMenuButton<int>(
+                color: Colors.black,
+                itemBuilder: (context) => [
+                  PopupMenuItem<int>(value: 0, child: Text("Settings")),
+                  PopupMenuItem<int>(
+                      value: 1, child: Text("Privacy Policy    ")),
+                  PopupMenuDivider(),
+                  PopupMenuItem<int>(
+                      value: 2,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.logout,
+                            color: Colors.redAccent,
+                          ),
+                          const SizedBox(
+                            width: 7,
+                          ),
+                          Text("Logout")
+                        ],
+                      )),
+                ],
+                onSelected: (item) => home.SelectedItem(context, item),
+              ),
+            ),
           ],
         ),
         floatingActionButton: FloatingActionButton(

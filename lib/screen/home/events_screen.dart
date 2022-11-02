@@ -1,5 +1,6 @@
 import 'package:bloodify/screen/home/create_new_event.dart';
 import 'package:bloodify/screen/home/event_details.dart';
+import 'package:bloodify/screen/home/home.dart';
 import 'package:bloodify/services/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
@@ -15,6 +16,8 @@ class EventsScreen extends StatefulWidget {
 }
 
 class _EventsScreenState extends State<EventsScreen> {
+  final Home home = new Home();
+
   FirebaseAuth auth = FirebaseAuth.instance;
   Future<void>? _launched;
   bool _hasCallSupport = false;
@@ -35,17 +38,40 @@ class _EventsScreenState extends State<EventsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Events'),
-          backgroundColor: Color.fromARGB(255, 173, 45, 45),
-          elevation: 0.0,
-          actions: <Widget>[
-            FlatButton.icon(
-              icon: Icon(Icons.logout),
-              onPressed: () async {
-                dynamic result = _auth.signOut();
-              },
-              label: Text('Sign Out'),
-            )
+          backgroundColor: Color.fromARGB(255, 170, 57, 48),
+          centerTitle: false,
+          title: Text("Events"),
+          actions: [
+            Theme(
+              data: Theme.of(context).copyWith(
+                  textTheme: TextTheme().apply(bodyColor: Colors.black),
+                  dividerColor: Colors.white,
+                  iconTheme: IconThemeData(color: Colors.white)),
+              child: PopupMenuButton<int>(
+                color: Colors.black,
+                itemBuilder: (context) => [
+                  PopupMenuItem<int>(value: 0, child: Text("Settings")),
+                  PopupMenuItem<int>(
+                      value: 1, child: Text("Privacy Policy    ")),
+                  PopupMenuDivider(),
+                  PopupMenuItem<int>(
+                      value: 2,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.logout,
+                            color: Colors.redAccent,
+                          ),
+                          const SizedBox(
+                            width: 7,
+                          ),
+                          Text("Logout")
+                        ],
+                      )),
+                ],
+                onSelected: (item) => home.SelectedItem(context, item),
+              ),
+            ),
           ],
         ),
         floatingActionButton: FloatingActionButton(
