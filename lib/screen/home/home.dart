@@ -2,7 +2,7 @@ import 'package:bloodify/screen/home/blood_requests.dart';
 import 'package:bloodify/screen/home/main_screen.dart';
 import 'package:bloodify/screen/home/privacy_policy.dart';
 import 'package:bloodify/screen/home/events_screen.dart';
-import 'package:bloodify/screen/home/settings.dart';
+import 'package:bloodify/screen/home/update_location.dart';
 import 'package:bloodify/services/auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -78,7 +78,7 @@ class Home extends StatelessWidget {
                   child: TabBar(
                     tabs: <Widget>[
                       Tab(
-                        icon: Icon(Icons.house_rounded),
+                        icon: Icon(Icons.search_sharp),
                       ),
                       Tab(
                         icon: Icon(Icons.bloodtype),
@@ -87,9 +87,10 @@ class Home extends StatelessWidget {
                         icon: Icon(Icons.event),
                       ),
                     ],
-                    labelColor: Colors.red,
+                    labelColor: Color.fromARGB(255, 170, 57, 48),
                     indicator: UnderlineTabIndicator(
-                      borderSide: BorderSide(color: Colors.red, width: 4.0),
+                      borderSide: BorderSide(
+                          color: Color.fromARGB(255, 170, 57, 48), width: 4.0),
                       insets: EdgeInsets.only(bottom: 44),
                     ),
                     unselectedLabelColor: Colors.grey,

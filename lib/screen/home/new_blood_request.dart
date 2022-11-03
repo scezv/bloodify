@@ -1,11 +1,61 @@
 import 'dart:math';
-
+import 'package:bloodify/screen/home/constants.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
+import 'package:overlay_support/overlay_support.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:bloodify/screen/home/globals.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+const AndroidNotificationChannel channel = AndroidNotificationChannel(
+    'high_importance_channel', // id
+    'High Importance Notifications', // title
+    //'This channel is used for important notifications.', // description
+    importance: Importance.high,
+    playSound: true);
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  print('A bg message just showed up :  ${message.messageId}');
+}
+
+Future MailFeedback(message, emails) async {
+  final service_id = 'service_s0im0ev';
+  final template_id = 'template_t6oyl1s';
+  final user_id = 'I7LBQiCxV2uGVs75_';
+  //var emails = getE
+  var url = Uri.parse('https://api.emailjs.com/api/v1.0/email/send');
+  try {
+    var response = await http.post(url,
+        headers: {
+          'origin': '<http://localhost>',
+          'Content-Type': 'application/json'
+        },
+        body: json.encode({
+          'service_id': service_id,
+          'template_id': template_id,
+          'user_id': user_id,
+          'template_params': {
+            'message': message,
+            'to_mail': emails,
+          }
+        }));
+    print('[FEED BACK RESPONSE]');
+    print(response.body);
+  } catch (error) {
+    print('[SEND FEEDBACK MAIL ERROR]');
+  }
+}
 
 class NewBloodRequest extends StatefulWidget {
   const NewBloodRequest({Key? key}) : super(key: key);
@@ -15,6 +65,58 @@ class NewBloodRequest extends StatefulWidget {
 }
 
 class _NewBloodRequestState extends State<NewBloodRequest> {
+  int _counter = 0;
+  var emails;
+
+  late TextEditingController _textToken;
+  late TextEditingController _textSetToken;
+  late TextEditingController _textTitle;
+  late TextEditingController _textBody;
+
+  @override
+  void dispose() {
+    _textToken.dispose();
+    _textTitle.dispose();
+    _textBody.dispose();
+    _textSetToken.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getEmails();
+
+    _textToken = TextEditingController();
+    _textSetToken = TextEditingController();
+    _textTitle = TextEditingController();
+    _textBody = TextEditingController();
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+      if (android != null) {
+        flutterLocalNotificationsPlugin.show(
+            notification.hashCode,
+            notification!.title,
+            notification.body,
+            NotificationDetails(
+              android: AndroidNotificationDetails(channel.id, channel.name,
+                  channelDescription: channel.description,
+                  color: Colors.blue,
+                  playSound: true,
+                  icon: '@mipmap/ic_launcher'),
+            ));
+      }
+    });
+  }
+
+  late final FirebaseMessaging _messaging;
   final _formKey = GlobalKey<FormState>();
   final bldRef = FirebaseFirestore.instance.collection('bloodRequests');
   // final userRef = FirebaseFirestore.instance.collection('user');
@@ -48,6 +150,18 @@ class _NewBloodRequestState extends State<NewBloodRequest> {
   ];
 
   var items = Global.districts;
+  getEmails() {
+    final docRef =
+        FirebaseFirestore.instance.collection("donorEmails").doc("emails");
+    docRef.get().then(
+      (DocumentSnapshot doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        print(data['emails']);
+        emails = data['emails'];
+      },
+      onError: (e) => print("Error getting document: $e"),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -440,23 +554,8 @@ class _NewBloodRequestState extends State<NewBloodRequest> {
                           ),
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
-                              //dynamic result;
-                              //  =
-                              //     await _auth.registerWithEmailAndPassword(
-                              //         email, password);
                               final User? cuser = auth.currentUser;
                               final uid = cuser?.uid;
-                              // if (checkedValue == true) {
-                              //   donorRef.doc(uid).set({
-                              //     "id": uid,
-                              //     "displayName": name,
-                              //     "location": location,
-                              //     "phoneNumber": phoneNumber,
-                              //     "bloodGroup": dropdownGroup,
-                              //     'gender': dropdownGender,
-                              //     'district': dropdownDistrict,
-                              //   });
-                              // }
                               bldRef.doc(generateRandomString()).set({
                                 "id": uid,
                                 "patientName": pName,
@@ -471,7 +570,16 @@ class _NewBloodRequestState extends State<NewBloodRequest> {
                                 'timestamp': timeinput.text,
                                 'date': DateTime.now(),
                               });
-                              print(dateinput);
+                              //print(dateinput);
+                              //Navigator.pop(context);
+                              // showSimpleNotification(
+                              //     Text(
+                              //         "this is a message from simple notification"),
+                              //     background: Colors.green);
+                              //print("the emails are: $emails");
+                              String message =
+                                  '$dropdownGroup required at $location on ${dateinput.text}, ${timeinput.text}';
+                              MailFeedback(message, emails);
                               Navigator.pop(context);
                             }
                           },
@@ -499,5 +607,48 @@ class _NewBloodRequestState extends State<NewBloodRequest> {
         'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
     return List.generate(15, (index) => _chars[r.nextInt(_chars.length)])
         .join();
+  }
+
+  Future<bool> pushNotificationsAllUsers({
+    required String title,
+    required String body,
+  }) async {
+    // FirebaseMessaging.instance.subscribeToTopic("myTopic1");
+
+    String dataNotifications = '{ '
+        ' "to" : "/topics/myTopic1" , '
+        ' "notification" : {'
+        ' "title":"$title" , '
+        ' "body":"$body" '
+        ' } '
+        ' } ';
+
+    var response = await http.post(
+      Uri.parse(Constants.BASE_URL),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': 'key= ${Constants.KEY_SERVER}',
+      },
+      body: dataNotifications,
+    );
+    print(response.body.toString());
+    return true;
+  }
+
+  void showNotification() {
+    // setState(() {
+    //   _counter++;
+    // });
+    flutterLocalNotificationsPlugin.show(
+        0,
+        "Testing $_counter",
+        "How you doin ?",
+        NotificationDetails(
+            android: AndroidNotificationDetails(channel.id, channel.name,
+                channelDescription: channel.description,
+                importance: Importance.high,
+                color: Colors.blue,
+                playSound: true,
+                icon: '@mipmap/ic_launcher')));
   }
 }

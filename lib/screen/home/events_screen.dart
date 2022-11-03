@@ -109,50 +109,37 @@ class _EventsScreenState extends State<EventsScreen> {
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                RichText(
+                                  text: TextSpan(
+                                    text: doc['eventName'],
+                                    style: const TextStyle(
+                                        decoration: TextDecoration.underline,
+                                        fontStyle: FontStyle.italic,
+                                        fontWeight: FontWeight.bold,
+                                        color: Color.fromARGB(255, 170, 57, 48),
+                                        fontSize: 18),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
                                 Row(
+                                  //crossAxisAlignment: WrapCrossAlignment.end,
                                   children: [
                                     RichText(
-                                      text: TextSpan(
-                                        text: doc['eventName'],
-                                        style: const TextStyle(
-                                            decoration:
-                                                TextDecoration.underline,
-                                            fontStyle: FontStyle.italic,
-                                            fontWeight: FontWeight.bold,
-                                            color: Color.fromARGB(
-                                                255, 170, 57, 48),
-                                            fontSize: 18),
-                                      ),
-                                    ),
-                                    Wrap(
-                                      crossAxisAlignment:
-                                          WrapCrossAlignment.end,
-                                      children: [
-                                        Icon(Icons.location_on),
-                                        RichText(
-                                            text: TextSpan(
-                                                text: doc['district'],
-                                                style: const TextStyle(
-                                                    decoration: TextDecoration
-                                                        .underline,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black,
-                                                    fontSize: 18),
-                                                recognizer:
-                                                    TapGestureRecognizer()
-                                                      ..onTap = () {
-                                                        // navigate to desired screen
-                                                      })),
-                                      ],
-                                    )
-                                    // Text(
-                                    //   'Jhapa',
-                                    //   textAlign: TextAlign.right,
-                                    //   style: TextStyle(
-                                    //       fontSize: 16,
-                                    //       color: Colors.black,
-                                    //       fontWeight: FontWeight.w500),
-                                    // ),
+                                        text: TextSpan(
+                                            text: doc['district'],
+                                            style: const TextStyle(
+                                                //decoration:
+                                                //    TextDecoration.underline,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                                fontSize: 18),
+                                            recognizer: TapGestureRecognizer()
+                                              ..onTap = () {
+                                                // navigate to desired screen
+                                              })),
+                                    Icon(Icons.location_on),
                                   ],
                                 ),
                                 const SizedBox(height: 5.0),

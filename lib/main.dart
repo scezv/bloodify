@@ -1,6 +1,7 @@
 import 'package:bloodify/models/user.dart';
 import 'package:bloodify/screen/home/globals.dart';
 import 'package:bloodify/screen/wrapper.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:bloodify/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -25,10 +26,12 @@ class MyApp extends StatelessWidget {
     return StreamProvider<Userr?>.value(
       initialData: null,
       value: AuthService().user,
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        scaffoldMessengerKey: snackbarKey,
-        home: SplashScreen(),
+      child: OverlaySupport.global(
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          scaffoldMessengerKey: snackbarKey,
+          home: SplashScreen(),
+        ),
       ),
     );
   }

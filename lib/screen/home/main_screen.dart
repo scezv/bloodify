@@ -35,48 +35,52 @@ class _MainScreenState extends State<MainScreen> {
     FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Color.fromARGB(255, 170, 57, 48),
-          centerTitle: false,
-          title: Text("Bloodify"),
-          actions: [
-            Theme(
-              data: Theme.of(context).copyWith(
-                  textTheme: TextTheme().apply(bodyColor: Colors.black),
-                  dividerColor: Colors.white,
-                  iconTheme: IconThemeData(color: Colors.white)),
-              child: PopupMenuButton<int>(
-                color: Colors.black,
-                itemBuilder: (context) => [
-                  PopupMenuItem<int>(value: 0, child: Text("Settings")),
-                  PopupMenuItem<int>(
-                      value: 1, child: Text("Privacy Policy    ")),
-                  PopupMenuDivider(),
-                  PopupMenuItem<int>(
-                      value: 2,
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.logout,
-                            color: Colors.redAccent,
-                          ),
-                          const SizedBox(
-                            width: 7,
-                          ),
-                          Text("Logout")
-                        ],
-                      )),
-                ],
-                onSelected: (item) => home.SelectedItem(context, item),
-              ),
+      appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 170, 57, 48),
+        centerTitle: false,
+        title: Text("Bloodify"),
+        actions: [
+          Theme(
+            data: Theme.of(context).copyWith(
+                textTheme: TextTheme().apply(bodyColor: Colors.black),
+                dividerColor: Colors.white,
+                iconTheme: IconThemeData(color: Colors.white)),
+            child: PopupMenuButton<int>(
+              color: Colors.black,
+              itemBuilder: (context) => [
+                PopupMenuItem<int>(value: 0, child: Text("Settings")),
+                PopupMenuItem<int>(value: 1, child: Text("Privacy Policy    ")),
+                PopupMenuDivider(),
+                PopupMenuItem<int>(
+                    value: 2,
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.logout,
+                          color: Colors.redAccent,
+                        ),
+                        const SizedBox(
+                          width: 7,
+                        ),
+                        Text("Logout")
+                      ],
+                    )),
+              ],
+              onSelected: (item) => home.SelectedItem(context, item),
             ),
-          ],
-        ),
-        body: Padding(
+          ),
+        ],
+      ),
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        //decoration: BoxDecoration(color: Color.fromARGB(255, 242, 238, 238)),
+        child: Padding(
           padding: const EdgeInsets.only(left: 16, top: 8, right: 16),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 const SizedBox(height: 15),
                 SizedBox(height: 10),
@@ -85,14 +89,15 @@ class _MainScreenState extends State<MainScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       const SizedBox(
                         height: 20,
                       ),
-
-                      SizedBox(height: 20),
+                      SizedBox(height: MediaQuery.of(context).size.height / 16),
                       Card(
-                        elevation: 20,
+                        //color: Color.fromARGB(255, 242, 235, 235),
+                        elevation: 10,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
@@ -309,6 +314,8 @@ class _MainScreenState extends State<MainScreen> {
               ],
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
