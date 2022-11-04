@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ShowDonors extends StatefulWidget {
   //const ShowDonors({Key? key}) : super(key: key);
@@ -14,6 +15,20 @@ class ShowDonors extends StatefulWidget {
 }
 
 class _ShowDonorsState extends State<ShowDonors> {
+  Future<void>? _launched;
+  bool _hasCallSupport = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Check for phone call support.
+    canLaunchUrl(Uri(scheme: 'tel', path: '123')).then((bool result) {
+      setState(() {
+        _hasCallSupport = result;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     String bloodGroup = widget.bloodGrp.toString();
@@ -26,7 +41,8 @@ class _ShowDonorsState extends State<ShowDonors> {
       floatingActionButton: null,
       body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
         stream: FirebaseFirestore.instance
-            .collection('donor')
+            .collection('user')
+            .where('donor', isEqualTo: true)
             .where('district', isEqualTo: selectedDistrict)
             .where('bloodGroup', isEqualTo: bloodGroup)
             .snapshots(),
@@ -56,7 +72,7 @@ class _ShowDonorsState extends State<ShowDonors> {
                             ),
                           ),
                           SizedBox(
-                            height: 10.0,
+                            height: 5.0,
                           ),
                           Text(
                             '${doc['location']}, ${doc['district']}',
@@ -65,6 +81,69 @@ class _ShowDonorsState extends State<ShowDonors> {
                               fontSize: 18,
                             ),
                           ),
+                          SizedBox(
+                            height: 5.0,
+                          ),
+                          Text(
+                            '${doc['phoneNumber']}',
+                            style: TextStyle(
+                              //fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5.0,
+                          ),
+                          Text(
+                            '${doc['email']}',
+                            style: TextStyle(
+                              //fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Row(
+                                children: [
+                                  Center(
+                                      child: ElevatedButton.icon(
+                                    onPressed: () => setState(() {
+                                      _launched =
+                                          _makePhoneCall(doc['phoneNumber']);
+                                    }),
+                                    icon: Icon(Icons.call),
+                                    label: Text('Call   '),
+                                    style: ElevatedButton.styleFrom(
+                                      primary: Color.fromARGB(255, 170, 57, 48),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 2, vertical: 2),
+                                    ),
+                                  )),
+                                ],
+                              ),
+                              SizedBox(
+                                width: 15.0,
+                              ),
+                              Row(
+                                children: [
+                                  Center(
+                                      child: ElevatedButton.icon(
+                                    onPressed: () => setState(() {
+                                      _launched = _makeSMS(doc['phoneNumber']);
+                                    }),
+                                    icon: Icon(Icons.message),
+                                    label: Text('SMS   '),
+                                    style: ElevatedButton.styleFrom(
+                                      primary: Color.fromARGB(255, 170, 57, 48),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 2, vertical: 2),
+                                    ),
+                                  )),
+                                ],
+                              )
+                            ],
+                          )
                         ]),
                   ),
                 );
@@ -81,57 +160,22 @@ class _ShowDonorsState extends State<ShowDonors> {
           }
         }),
       ),
-      // body: Padding(
-      //   padding: const EdgeInsets.all(10.0),
-      //   child: Container(
-      //     child: RichText(
-      //       text: TextSpan(
-      //           text: '',
-      //           style: TextStyle(
-      //               //decoration: TextDecoration.underline,
-      //               //fontStyle: FontStyle.italic,
-      //               //fontWeight: FontWeight.bold,
-      //               color: Color.fromARGB(255, 170, 57, 48),
-      //               fontSize: 32),
-      //           children: <TextSpan>[
-      //             TextSpan(
-      //               text: bloodGroup,
-      //               style: TextStyle(
-      //                   //decoration: TextDecoration.underline,
-      //                   //fontStyle: FontStyle.italic,
-      //                   fontWeight: FontWeight.bold,
-      //                   color: Color.fromARGB(255, 170, 57, 48),
-      //                   fontSize: 32),
-      //             ),
-      //             TextSpan(
-      //                 text: " Donors in ",
-      //                 style: TextStyle(
-      //                     //fontWeight: FontWeight.bold,
-      //                     color: Colors.black,
-      //                     fontSize: 30),
-      //                 recognizer: TapGestureRecognizer()
-      //                   ..onTap = () {
-      //                     // navigate to desired screen
-      //                   }),
-      //             TextSpan(
-      //                 text: selectedDistrict,
-      //                 style: TextStyle(
-      //                     fontWeight: FontWeight.bold,
-      //                     color: Colors.black,
-      //                     fontSize: 32),
-      //                 recognizer: TapGestureRecognizer()
-      //                   ..onTap = () {
-      //                     // navigate to desired screen
-      //                   })
-      //           ]),
-      //     ),
-      //     decoration: BoxDecoration(
-      //       border: Border(
-      //         bottom: BorderSide(color: Colors.black),
-      //       ),
-      //     ),
-      //   ),
-      // ),
     );
+  }
+
+  Future<void> _makePhoneCall(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    await launchUrl(launchUri);
+  }
+
+  Future<void> _makeSMS(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'sms',
+      path: phoneNumber,
+    );
+    await launchUrl(launchUri);
   }
 }

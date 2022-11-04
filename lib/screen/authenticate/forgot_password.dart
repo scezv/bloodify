@@ -22,7 +22,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.red,
+        backgroundColor: Color.fromARGB(255, 170, 57, 48),
         elevation: 0.0,
         title: Text('Forgot Password'),
       ),
@@ -76,7 +76,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                         child: Text("Register".toUpperCase(),
                             style: TextStyle(fontSize: 14)),
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.red,
+                          primary: Color.fromARGB(255, 170, 57, 48),
                           elevation: 3,
                           onPrimary: Colors.white,
                           shape: RoundedRectangleBorder(

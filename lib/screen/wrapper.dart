@@ -1,6 +1,7 @@
 import 'package:bloodify/models/user.dart';
 import 'package:bloodify/screen/authenticate/authenticate.dart';
 import 'package:bloodify/screen/home/home.dart';
+import 'package:bloodify/screen/home/verify_mail.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,7 @@ class _WrapperState extends State<Wrapper> {
     if (user == null) {
       return Authenticate();
     } else {
-      return Home();
+      return VerifyMailPage();
     }
   }
 }

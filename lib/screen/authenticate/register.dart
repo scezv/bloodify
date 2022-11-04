@@ -381,19 +381,6 @@ class _RegisterState extends State<Register> {
                               final User? cuser = auth.currentUser;
                               final uid = cuser?.uid;
                               if (checkedValue == true) {
-                                userRef.doc(uid).set({
-                                  'donor': true,
-                                });
-                                donorRef.doc(uid).set({
-                                  "id": uid,
-                                  "email": email,
-                                  "displayName": name,
-                                  "location": location,
-                                  "phoneNumber": phoneNumber,
-                                  "bloodGroup": dropdownGroup,
-                                  'gender': dropdownGender,
-                                  'district': dropdownDistrict,
-                                });
                                 final donorEmail = FirebaseFirestore.instance
                                     .collection("donorEmails")
                                     .doc("emails");
@@ -404,6 +391,7 @@ class _RegisterState extends State<Register> {
                               }
                               userRef.doc(uid).set({
                                 "id": uid,
+                                "donor": checkedValue,
                                 "email": email,
                                 "displayName": name,
                                 "location": location,

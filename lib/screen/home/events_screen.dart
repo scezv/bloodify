@@ -50,12 +50,9 @@ class _EventsScreenState extends State<EventsScreen> {
               child: PopupMenuButton<int>(
                 color: Colors.black,
                 itemBuilder: (context) => [
-                  PopupMenuItem<int>(value: 0, child: Text("Settings")),
+                  PopupMenuItem<int>(value: 0, child: Text("Profile")),
                   PopupMenuItem<int>(
-                      value: 1, child: Text("Privacy Policy    ")),
-                  PopupMenuDivider(),
-                  PopupMenuItem<int>(
-                      value: 2,
+                      value: 1,
                       child: Row(
                         children: [
                           Icon(

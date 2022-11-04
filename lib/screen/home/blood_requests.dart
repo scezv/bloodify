@@ -51,12 +51,9 @@ class _BloodRequestScreenState extends State<BloodRequestScreen> {
               child: PopupMenuButton<int>(
                 color: Colors.black,
                 itemBuilder: (context) => [
-                  PopupMenuItem<int>(value: 0, child: Text("Settings")),
+                  PopupMenuItem<int>(value: 0, child: Text("Profile")),
                   PopupMenuItem<int>(
-                      value: 1, child: Text("Privacy Policy    ")),
-                  PopupMenuDivider(),
-                  PopupMenuItem<int>(
-                      value: 2,
+                      value: 1,
                       child: Row(
                         children: [
                           Icon(
@@ -227,16 +224,20 @@ class _BloodRequestScreenState extends State<BloodRequestScreen> {
                                           color: Colors.black,
                                           fontSize: 16),
                                     )),
-                                    RichText(
-                                        text: TextSpan(
-                                            text: doc['location'],
-                                            style: const TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 16),
-                                            recognizer: TapGestureRecognizer()
-                                              ..onTap = () {
-                                                // navigate to desired screen
-                                              })),
+                                    Container(
+                                      width:
+                                          MediaQuery.of(context).size.width / 2,
+                                      child: RichText(
+                                          text: TextSpan(
+                                              text: doc['location'],
+                                              style: const TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 16),
+                                              recognizer: TapGestureRecognizer()
+                                                ..onTap = () {
+                                                  // navigate to desired screen
+                                                })),
+                                    ),
                                   ],
                                 ),
                                 const SizedBox(height: 5.0),

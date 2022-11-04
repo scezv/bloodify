@@ -2,7 +2,7 @@ import 'package:bloodify/screen/home/blood_requests.dart';
 import 'package:bloodify/screen/home/main_screen.dart';
 import 'package:bloodify/screen/home/privacy_policy.dart';
 import 'package:bloodify/screen/home/events_screen.dart';
-import 'package:bloodify/screen/home/update_location.dart';
+import 'package:bloodify/screen/home/profile.dart';
 import 'package:bloodify/services/auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -114,11 +114,6 @@ class Home extends StatelessWidget {
             .push(MaterialPageRoute(builder: (context) => SettingsPage()));
         break;
       case 1:
-        print("Privacy Clicked");
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => PrivacyPolicyPage()));
-        break;
-      case 2:
         print("User Logged out");
         _auth.signOut();
         break;

@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'package:bloodify/screen/home/constants.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:overlay_support/overlay_support.dart';
@@ -14,20 +13,20 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-const AndroidNotificationChannel channel = AndroidNotificationChannel(
-    'high_importance_channel', // id
-    'High Importance Notifications', // title
-    //'This channel is used for important notifications.', // description
-    importance: Importance.high,
-    playSound: true);
+// const AndroidNotificationChannel channel = AndroidNotificationChannel(
+//     'high_importance_channel', // id
+//     'High Importance Notifications', // title
+//     //'This channel is used for important notifications.', // description
+//     importance: Importance.high,
+//     playSound: true);
 
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
+// final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+//     FlutterLocalNotificationsPlugin();
 
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
-  print('A bg message just showed up :  ${message.messageId}');
-}
+// Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+//   await Firebase.initializeApp();
+//   print('A bg message just showed up :  ${message.messageId}');
+// }
 
 Future MailFeedback(message, emails) async {
   final service_id = 'service_s0im0ev';
@@ -91,29 +90,6 @@ class _NewBloodRequestState extends State<NewBloodRequest> {
   void initState() {
     super.initState();
     getEmails();
-
-    _textToken = TextEditingController();
-    _textSetToken = TextEditingController();
-    _textTitle = TextEditingController();
-    _textBody = TextEditingController();
-
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      RemoteNotification? notification = message.notification;
-      AndroidNotification? android = message.notification?.android;
-      if (android != null) {
-        flutterLocalNotificationsPlugin.show(
-            notification.hashCode,
-            notification!.title,
-            notification.body,
-            NotificationDetails(
-              android: AndroidNotificationDetails(channel.id, channel.name,
-                  channelDescription: channel.description,
-                  color: Colors.blue,
-                  playSound: true,
-                  icon: '@mipmap/ic_launcher'),
-            ));
-      }
-    });
   }
 
   late final FirebaseMessaging _messaging;
@@ -609,46 +585,46 @@ class _NewBloodRequestState extends State<NewBloodRequest> {
         .join();
   }
 
-  Future<bool> pushNotificationsAllUsers({
-    required String title,
-    required String body,
-  }) async {
-    // FirebaseMessaging.instance.subscribeToTopic("myTopic1");
+  // Future<bool> pushNotificationsAllUsers({
+  //   required String title,
+  //   required String body,
+  // }) async {
+  //   // FirebaseMessaging.instance.subscribeToTopic("myTopic1");
 
-    String dataNotifications = '{ '
-        ' "to" : "/topics/myTopic1" , '
-        ' "notification" : {'
-        ' "title":"$title" , '
-        ' "body":"$body" '
-        ' } '
-        ' } ';
+  //   String dataNotifications = '{ '
+  //       ' "to" : "/topics/myTopic1" , '
+  //       ' "notification" : {'
+  //       ' "title":"$title" , '
+  //       ' "body":"$body" '
+  //       ' } '
+  //       ' } ';
 
-    var response = await http.post(
-      Uri.parse(Constants.BASE_URL),
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': 'key= ${Constants.KEY_SERVER}',
-      },
-      body: dataNotifications,
-    );
-    print(response.body.toString());
-    return true;
-  }
+  //   var response = await http.post(
+  //     Uri.parse(Constants.BASE_URL),
+  //     headers: <String, String>{
+  //       'Content-Type': 'application/json',
+  //       'Authorization': 'key= ${Constants.KEY_SERVER}',
+  //     },
+  //     body: dataNotifications,
+  //   );
+  //   print(response.body.toString());
+  //   return true;
+  // }
 
-  void showNotification() {
-    // setState(() {
-    //   _counter++;
-    // });
-    flutterLocalNotificationsPlugin.show(
-        0,
-        "Testing $_counter",
-        "How you doin ?",
-        NotificationDetails(
-            android: AndroidNotificationDetails(channel.id, channel.name,
-                channelDescription: channel.description,
-                importance: Importance.high,
-                color: Colors.blue,
-                playSound: true,
-                icon: '@mipmap/ic_launcher')));
-  }
+  // void showNotification() {
+  //   // setState(() {
+  //   //   _counter++;
+  //   // });
+  //   flutterLocalNotificationsPlugin.show(
+  //       0,
+  //       "Testing $_counter",
+  //       "How you doin ?",
+  //       NotificationDetails(
+  //           android: AndroidNotificationDetails(channel.id, channel.name,
+  //               channelDescription: channel.description,
+  //               importance: Importance.high,
+  //               color: Colors.blue,
+  //               playSound: true,
+  //               icon: '@mipmap/ic_launcher')));
+  // }
 }

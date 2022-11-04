@@ -52,7 +52,7 @@ class _SignInState extends State<SignIn> {
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
-                    Container(
+                    Center(
                       child: Image.asset('assets/img/logo.png'),
                     ),
                     SizedBox(
@@ -163,7 +163,6 @@ class _SignInState extends State<SignIn> {
                               //       },
                               //     ),
                               //   );
-
                               //   // Find the ScaffoldMessenger in the widget tree
                               //   // and use it to show a SnackBar.
                               //   ScaffoldMessenger.of(context).showSnackBar(snackBar);
