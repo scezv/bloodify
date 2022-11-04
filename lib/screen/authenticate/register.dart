@@ -1,5 +1,6 @@
 import 'package:bloodify/screen/home/globals.dart';
 import 'package:bloodify/services/auth.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -27,9 +28,9 @@ class _RegisterState extends State<Register> {
   String name = '';
   String location = '';
   String phoneNumber = '';
-  String dropdownDistrict = 'Achham';
-  String dropdownGender = 'Male';
-  String dropdownGroup = 'A+';
+  String dropdownDistrict = '';
+  String dropdownGender = '';
+  String dropdownGroup = '';
 
   bool? checkedValue = false;
 
@@ -42,7 +43,7 @@ class _RegisterState extends State<Register> {
     'Prefer not to say',
   ];
 
-  var items = Global.districts;
+  var districts = Global.districts;
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +153,7 @@ class _RegisterState extends State<Register> {
                       if (value.length != 10) {
                         return 'Mobile Number must be of 10 digit';
                       }
-                      String pattern = r'(^9[7|8]\d{8}$)';
+                      String pattern = r'(^9[6|7|8]\d{8}$)';
                       RegExp regExp = new RegExp(pattern);
                       if (!regExp.hasMatch(value)) {
                         return 'Mobile number not valid';
@@ -217,111 +218,251 @@ class _RegisterState extends State<Register> {
                       });
                     },
                   ),
-                  SizedBox(height: 20.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Select your district    ',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                      DropdownButton(
-                        // Initial Value
-                        value: dropdownDistrict,
+                  SizedBox(height: 10.0),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   children: [
+                  //     Text(
+                  //       'Select your district    ',
+                  //       style: TextStyle(
+                  //         fontWeight: FontWeight.bold,
+                  //         color: Colors.black,
+                  //       ),
+                  //     ),
+                  //     DropdownButton(
+                  //       // Initial Value
+                  //       value: dropdownDistrict,
 
-                        // Down Arrow Icon
-                        icon: const Icon(Icons.keyboard_arrow_down),
+                  //       // Down Arrow Icon
+                  //       icon: const Icon(Icons.keyboard_arrow_down),
 
-                        // Array list of items
-                        items: items.map((String items) {
-                          return DropdownMenuItem(
-                            value: items,
-                            child: Text(items),
-                          );
-                        }).toList(),
-                        // After selecting the desired option,it will
-                        // change button value to selected value
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            dropdownDistrict = newValue!;
-                          });
-                        },
+                  //       // Array list of items
+                  //       items: items.map((String items) {
+                  //         return DropdownMenuItem(
+                  //           value: items,
+                  //           child: Text(items),
+                  //         );
+                  //       }).toList(),
+                  //       // After selecting the desired option,it will
+                  //       // change button value to selected value
+                  //       onChanged: (String? newValue) {
+                  //         setState(() {
+                  //           dropdownDistrict = newValue!;
+                  //         });
+                  //       },
+                  //     ),
+                  //   ],
+                  // ),
+                  Center(
+                    child: DropdownButtonFormField2(
+                      //buttonWidth: ,
+                      decoration: InputDecoration(
+                        //Add isDense true and zero Padding.
+                        //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
+                        //isDense: true,
+                        contentPadding: EdgeInsets.zero,
+                        border: OutlineInputBorder(
+                            //borderRadius: BorderRadius.circular(15),
+                            ),
+                        //Add more decoration as you want here
+                        //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
                       ),
-                    ],
+                      isExpanded: false,
+                      hint: const Text(
+                        'District',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      icon: const Icon(
+                        Icons.arrow_drop_down,
+                        color: Colors.black45,
+                      ),
+                      iconSize: 30,
+                      buttonHeight: 60,
+                      dropdownWidth: MediaQuery.of(context).size.width / 1.6,
+                      offset: const Offset(50, 0),
+                      buttonPadding: const EdgeInsets.only(left: 20, right: 10),
+                      dropdownDecoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      items: districts
+                          .map((item) => DropdownMenuItem<String>(
+                                value: item,
+                                child: Text(
+                                  item,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ))
+                          .toList(),
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Please select the district.';
+                        }
+                      },
+                      onChanged: (value) {
+                        setState(() {
+                          dropdownDistrict = value.toString();
+                        });
+                        //Do something when changing the item if you want.
+                      },
+                      onSaved: (value) {
+                        dropdownDistrict = value.toString();
+                      },
+                    ),
                   ),
-                  SizedBox(height: 5.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Select your gender    ',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
+                  SizedBox(height: 10.0),
+                  Center(
+                    child: DropdownButtonFormField2(
+                      buttonWidth: MediaQuery.of(context).size.width / 1.5,
+                      decoration: InputDecoration(
+                        //Add isDense true and zero Padding.
+                        //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
+                        //isDense: true,
+                        contentPadding: EdgeInsets.zero,
+                        border: OutlineInputBorder(
+                            //borderRadius: BorderRadius.circular(15),
+                            ),
+                        //Add more decoration as you want here
+                        //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
                       ),
-                      DropdownButton(
-                        // Initial Value
-                        value: dropdownGender,
-
-                        // Down Arrow Icon
-                        icon: const Icon(Icons.keyboard_arrow_down),
-
-                        // Array list of items
-                        items: itemss.map((String itemss) {
-                          return DropdownMenuItem(
-                            value: itemss,
-                            child: Text(itemss),
-                          );
-                        }).toList(),
-                        // After selecting the desired option,it will
-                        // change button value to selected value
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            dropdownGender = newValue!;
-                          });
-                        },
+                      isExpanded: true,
+                      hint: const Text(
+                        'Gender',
+                        style: TextStyle(fontSize: 16),
                       ),
-                    ],
+                      icon: const Icon(
+                        Icons.arrow_drop_down,
+                        color: Colors.black45,
+                      ),
+                      iconSize: 30,
+                      buttonHeight: 60,
+                      offset: const Offset(50, 0),
+                      dropdownWidth: MediaQuery.of(context).size.width / 1.6,
+                      buttonPadding: const EdgeInsets.only(left: 20, right: 10),
+                      dropdownDecoration: BoxDecoration(
+                          //borderRadius: BorderRadius.circular(15),
+                          ),
+                      items: itemss
+                          .map((item) => DropdownMenuItem<String>(
+                                value: item,
+                                child: Text(
+                                  item,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ))
+                          .toList(),
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Please select the gender.';
+                        }
+                      },
+                      onChanged: (value) {
+                        setState(() {
+                          dropdownGender = value.toString();
+                        });
+                        //Do something when changing the item if you want.
+                      },
+                      onSaved: (value) {
+                        dropdownGender = value.toString();
+                      },
+                    ),
                   ),
-                  SizedBox(height: 5.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Select your blood group         ',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
+                  SizedBox(height: 10.0),
+                  Center(
+                    child: DropdownButtonFormField2(
+                      buttonWidth: MediaQuery.of(context).size.width / 1.5,
+                      decoration: InputDecoration(
+                        //Add isDense true and zero Padding.
+                        //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
+                        //isDense: true,
+                        contentPadding: EdgeInsets.zero,
+                        border: OutlineInputBorder(
+                            //borderRadius: BorderRadius.circular(15),
+                            ),
+                        //Add more decoration as you want here
+                        //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
                       ),
-                      DropdownButton(
-                        // Initial Value
-                        value: dropdownGroup,
-
-                        // Down Arrow Icon
-                        icon: const Icon(Icons.keyboard_arrow_down),
-
-                        // Array list of items
-                        items: group.map((String group) {
-                          return DropdownMenuItem(
-                            value: group,
-                            child: Text(group),
-                          );
-                        }).toList(),
-                        // After selecting the desired option,it will
-                        // change button value to selected value
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            dropdownGroup = newValue!;
-                          });
-                        },
+                      isExpanded: true,
+                      hint: const Text(
+                        'Blood Group',
+                        style: TextStyle(fontSize: 16),
                       ),
-                    ],
+                      icon: const Icon(
+                        Icons.arrow_drop_down,
+                        color: Colors.black45,
+                      ),
+                      iconSize: 30,
+                      buttonHeight: 60,
+                      dropdownWidth: MediaQuery.of(context).size.width / 1.6,
+                      offset: const Offset(50, 0),
+                      buttonPadding: const EdgeInsets.only(left: 20, right: 10),
+                      dropdownDecoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      items: group
+                          .map((item) => DropdownMenuItem<String>(
+                                value: item,
+                                child: Text(
+                                  item,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ))
+                          .toList(),
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Please select the blood group.';
+                        }
+                      },
+                      onChanged: (value) {
+                        setState(() {
+                          dropdownGroup = value.toString();
+                        });
+                        //Do something when changing the item if you want.
+                      },
+                      onSaved: (value) {
+                        dropdownGroup = value.toString();
+                      },
+                    ),
                   ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   children: [
+                  //     Text(
+                  //       'Select your blood group         ',
+                  //       style: TextStyle(
+                  //         fontWeight: FontWeight.bold,
+                  //         color: Colors.black,
+                  //       ),
+                  //     ),
+                  //     DropdownButton(
+                  //       // Initial Value
+                  //       value: dropdownGroup,
+
+                  //       // Down Arrow Icon
+                  //       icon: const Icon(Icons.keyboard_arrow_down),
+
+                  //       // Array list of items
+                  //       items: group.map((String group) {
+                  //         return DropdownMenuItem(
+                  //           value: group,
+                  //           child: Text(group),
+                  //         );
+                  //       }).toList(),
+                  //       // After selecting the desired option,it will
+                  //       // change button value to selected value
+                  //       onChanged: (String? newValue) {
+                  //         setState(() {
+                  //           dropdownGroup = newValue!;
+                  //         });
+                  //       },
+                  //     ),
+                  //   ],
+                  // ),
                   // Row(
                   //   children: <Widget>[
                   //     SizedBox(
@@ -354,13 +495,13 @@ class _RegisterState extends State<Register> {
                     controlAffinity: ListTileControlAffinity
                         .leading, //  <-- leading Checkbox
                   ),
-                  SizedBox(height: 20.0),
+                  const SizedBox(height: 20.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SizedBox(
                         height: 50.0,
-                        width: 250,
+                        width: MediaQuery.of(context).size.width / 1.6,
                         child: ElevatedButton(
                           //color: Colors.red,
                           child: Text("Register".toUpperCase(),

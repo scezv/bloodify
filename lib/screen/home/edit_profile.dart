@@ -118,7 +118,7 @@ class _EditProfileState extends State<EditProfile> {
                                 if (value.length != 10) {
                                   return 'Mobile Number must be of 10 digit';
                                 }
-                                String pattern = r'(^9[7|8]\d{8}$)';
+                                String pattern = r'(^9[6|7|8]\d{8}$)';
                                 RegExp regExp = RegExp(pattern);
                                 if (!regExp.hasMatch(value)) {
                                   return 'Mobile number not valid';
@@ -139,31 +139,34 @@ class _EditProfileState extends State<EditProfile> {
                               // print('************************');
                               // print(cvUrl);
                               // print(pfpUrl);
-                              FirebaseFirestore.instance
-                                  .collection("user")
-                                  .doc(auth.currentUser!.uid)
-                                  .update({
-                                'displayName': _UserNameController.text,
-                                'phoneNumber': _PhoneNoController.text,
-                                'email': auth.currentUser!.email,
-                              }).then((value) {
-                                Navigator.pop(context);
-                              }).onError((error, stackTrace) async {
-                                showDialog<String>(
-                                    context: context,
-                                    builder: (BuildContext context) =>
-                                        AlertDialog(
-                                          title: const Text('Error'),
-                                          content: Text(error.toString()),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              onPressed: () =>
-                                                  Navigator.pop(context, 'OK'),
-                                              child: const Text('OK'),
-                                            ),
-                                          ],
-                                        ));
-                              });
+                              if (_editform.currentState!.validate()) {
+                                _editform.currentState!.save();
+                                FirebaseFirestore.instance
+                                    .collection("user")
+                                    .doc(auth.currentUser!.uid)
+                                    .update({
+                                  'displayName': _UserNameController.text,
+                                  'phoneNumber': _PhoneNoController.text,
+                                  'email': auth.currentUser!.email,
+                                }).then((value) {
+                                  Navigator.pop(context);
+                                }).onError((error, stackTrace) async {
+                                  showDialog<String>(
+                                      context: context,
+                                      builder: (BuildContext context) =>
+                                          AlertDialog(
+                                            title: const Text('Error'),
+                                            content: Text(error.toString()),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                onPressed: () => Navigator.pop(
+                                                    context, 'OK'),
+                                                child: const Text('OK'),
+                                              ),
+                                            ],
+                                          ));
+                                });
+                              }
                             },
                             child: Container(
                               height: 50,

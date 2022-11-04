@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:bloodify/screen/home/globals.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -33,85 +35,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   String bldAmt = '';
   String desc = '';
 
-  bool? checkedValue = false;
-
-  var items = [
-    "Achham",
-    "Arghakhanchi",
-    "Baglung",
-    "Baitadi",
-    "Bajhang",
-    "Bajura",
-    "Banke",
-    "Bara",
-    "Bardiya",
-    "Bhaktapur",
-    "Bhojpur",
-    "Chitwan",
-    "Dadeldhura",
-    "Dailekh",
-    "Dang deukhuri",
-    "Darchula",
-    "Dhading",
-    "Dhankuta",
-    "Dhanusa",
-    "Dholkha",
-    "Dolpa",
-    "Doti",
-    "Gorkha",
-    "Gulmi",
-    "Humla",
-    "Ilam",
-    "Jajarkot",
-    "Jhapa",
-    "Jumla",
-    "Kailali",
-    "Kalikot",
-    "Kanchanpur",
-    "Kapilvastu",
-    "Kaski",
-    "Kathmandu",
-    "Kavrepalanchok",
-    "Khotang",
-    "Lalitpur",
-    "Lamjung",
-    "Mahottari",
-    "Makwanpur",
-    "Manang",
-    "Morang",
-    "Mugu",
-    "Mustang",
-    "Myagdi",
-    "Nawalparasi",
-    "Nuwakot",
-    "Okhaldhunga",
-    "Palpa",
-    "Panchthar",
-    "Parbat",
-    "Parsa",
-    "Pyuthan",
-    "Ramechhap",
-    "Rasuwa",
-    "Rautahat",
-    "Rolpa",
-    "Rukum",
-    "Rupandehi",
-    "Salyan",
-    "Sankhuwasabha",
-    "Saptari",
-    "Sarlahi",
-    "Sindhuli",
-    "Sindhupalchok",
-    "Siraha",
-    "Solukhumbu",
-    "Sunsari",
-    "Surkhet",
-    "Syangja",
-    "Tanahu",
-    "Taplejung",
-    "Terhathum",
-    "Udayapur",
-  ];
+  var districts = Global.districts;
 
   String? _hour, _minute, _time;
   String? dateTime;
@@ -214,7 +138,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                       if (value.length != 10) {
                         return 'Mobile Number must be of 10 digit';
                       }
-                      String pattern = r'(^9[7|8]\d{8}$)';
+                      String pattern = r'(^9[6|7|8]\d{8}$)';
                       RegExp regExp = new RegExp(pattern);
                       if (!regExp.hasMatch(value)) {
                         return 'Mobile number not valid';
@@ -285,7 +209,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                       border: OutlineInputBorder(),
                       focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.red)),
-                      icon: Icon(
+                      suffixIcon: Icon(
                         Icons.calendar_today,
                         color: Colors.red,
                       ), //icon of text field
@@ -338,8 +262,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                         border: OutlineInputBorder(),
                         focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.red)),
-                        icon: Icon(
-                          Icons.lock_clock,
+                        suffixIcon: Icon(
+                          Icons.timer,
                           color: Colors.red,
                         ), //icon of text field
                         labelText: "Enter Time" //label text of field
@@ -392,39 +316,63 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                     },
                   ),
                   SizedBox(height: 10.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Select the district    ',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
+                  Center(
+                    child: DropdownButtonFormField2(
+                      //buttonWidth: ,
+                      decoration: InputDecoration(
+                        //Add isDense true and zero Padding.
+                        //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
+                        //isDense: true,
+                        contentPadding: EdgeInsets.zero,
+                        border: OutlineInputBorder(
+                            //borderRadius: BorderRadius.circular(15),
+                            ),
+                        //Add more decoration as you want here
+                        //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
                       ),
-                      DropdownButton(
-                        // Initial Value
-                        value: dropdownDistrict,
-
-                        // Down Arrow Icon
-                        icon: const Icon(Icons.keyboard_arrow_down),
-
-                        // Array list of items
-                        items: items.map((String items) {
-                          return DropdownMenuItem(
-                            value: items,
-                            child: Text(items),
-                          );
-                        }).toList(),
-                        // After selecting the desired option,it will
-                        // change button value to selected value
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            dropdownDistrict = newValue!;
-                          });
-                        },
+                      isExpanded: false,
+                      hint: const Text(
+                        'District',
+                        style: TextStyle(fontSize: 16),
                       ),
-                    ],
+                      icon: const Icon(
+                        Icons.arrow_drop_down,
+                        color: Colors.black45,
+                      ),
+                      iconSize: 30,
+                      buttonHeight: 60,
+                      dropdownWidth: MediaQuery.of(context).size.width / 1.6,
+                      offset: const Offset(50, 0),
+                      buttonPadding: const EdgeInsets.only(left: 20, right: 10),
+                      dropdownDecoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      items: districts
+                          .map((item) => DropdownMenuItem<String>(
+                                value: item,
+                                child: Text(
+                                  item,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ))
+                          .toList(),
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Please select the district.';
+                        }
+                      },
+                      onChanged: (value) {
+                        setState(() {
+                          dropdownDistrict = value.toString();
+                        });
+                        //Do something when changing the item if you want.
+                      },
+                      onSaved: (value) {
+                        dropdownDistrict = value.toString();
+                      },
+                    ),
                   ),
                   SizedBox(height: 20.0),
                   Row(
@@ -432,7 +380,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                     children: [
                       SizedBox(
                         height: 50.0,
-                        width: 250,
+                        width: MediaQuery.of(context).size.width / 1.6,
                         child: ElevatedButton(
                           //color: Colors.red,
                           child: Text("create a event".toUpperCase(),

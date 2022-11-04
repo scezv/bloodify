@@ -121,12 +121,12 @@ class _SettingsPageState extends State<SettingsPage> {
                         SizedBox(
                           height: 10,
                         ),
-                        Row(
+                        Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             SizedBox(
                               height: 50,
-                              width: MediaQuery.of(context).size.width / 2.5,
+                              width: MediaQuery.of(context).size.width / 2,
                               child: OutlinedButton.icon(
                                 style: ElevatedButton.styleFrom(
                                   primary: Color.fromARGB(255, 173, 45, 45),
@@ -149,11 +149,11 @@ class _SettingsPageState extends State<SettingsPage> {
                               ),
                             ),
                             SizedBox(
-                              height: 5,
+                              height: 15,
                             ),
                             SizedBox(
                               height: 50,
-                              width: MediaQuery.of(context).size.width / 2.5,
+                              width: MediaQuery.of(context).size.width / 2,
                               child: OutlinedButton.icon(
                                 style: ElevatedButton.styleFrom(
                                   primary: Color.fromARGB(255, 173, 45, 45),

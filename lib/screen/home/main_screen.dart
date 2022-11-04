@@ -144,7 +144,7 @@ class _MainScreenState extends State<MainScreen> {
                                     isExpanded: true,
                                     hint: const Text(
                                       'District',
-                                      style: TextStyle(fontSize: 14),
+                                      style: TextStyle(fontSize: 16),
                                     ),
                                     icon: const Icon(
                                       Icons.arrow_drop_down,
@@ -164,7 +164,7 @@ class _MainScreenState extends State<MainScreen> {
                                               child: Text(
                                                 item,
                                                 style: const TextStyle(
-                                                  fontSize: 14,
+                                                  fontSize: 16,
                                                 ),
                                               ),
                                             ))
@@ -206,7 +206,7 @@ class _MainScreenState extends State<MainScreen> {
                                     isExpanded: true,
                                     hint: const Text(
                                       'Blood group',
-                                      style: TextStyle(fontSize: 14),
+                                      style: TextStyle(fontSize: 16),
                                     ),
                                     icon: const Icon(
                                       Icons.arrow_drop_down,
@@ -225,7 +225,7 @@ class _MainScreenState extends State<MainScreen> {
                                               child: Text(
                                                 item,
                                                 style: const TextStyle(
-                                                  fontSize: 14,
+                                                  fontSize: 16,
                                                 ),
                                               ),
                                             ))
