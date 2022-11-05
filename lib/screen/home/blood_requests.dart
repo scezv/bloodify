@@ -35,6 +35,18 @@ class _BloodRequestScreenState extends State<BloodRequestScreen> {
     });
   }
 
+  bool _isButtonDisabled(var id) {
+    if (auth.currentUser!.uid != id) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  void _deleteDoc(var id) {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -349,6 +361,39 @@ class _BloodRequestScreenState extends State<BloodRequestScreen> {
                                           }),
                                           icon: Icon(Icons.message),
                                           label: Text('SMS   '),
+                                          style: ElevatedButton.styleFrom(
+                                            primary: Color.fromARGB(
+                                                255, 170, 57, 48),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 2, vertical: 2),
+                                          ),
+                                        )),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      width: 5.0,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Center(
+                                            child: ElevatedButton.icon(
+                                          onPressed:
+                                              _isButtonDisabled(doc['id'])
+                                                  ? null
+                                                  : (() {
+                                                      FirebaseFirestore.instance
+                                                          .collection(
+                                                              'bloodRequests')
+                                                          .doc(doc.id)
+                                                          .delete()
+                                                          .then((value) {
+                                                        print('Deleted');
+                                                        //Navigator.pop(context,'Deleted');
+                                                      });
+                                                      ;
+                                                    }),
+                                          icon: Icon(Icons.message),
+                                          label: Text('Mark Fulfilled '),
                                           style: ElevatedButton.styleFrom(
                                             primary: Color.fromARGB(
                                                 255, 170, 57, 48),
