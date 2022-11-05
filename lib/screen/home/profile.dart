@@ -1,4 +1,5 @@
 import 'package:bloodify/screen/home/edit_profile.dart';
+import 'package:bloodify/screen/home/update_donor_status.dart';
 import 'package:bloodify/screen/home/update_location.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -173,6 +174,35 @@ class _SettingsPageState extends State<SettingsPage> {
                                   size: 24.0,
                                 ),
                                 label: Text('  Update Location  '), // <-- Text
+                              ),
+                            ),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            SizedBox(
+                              height: 50,
+                              width: MediaQuery.of(context).size.width / 1.7,
+                              child: OutlinedButton.icon(
+                                style: ElevatedButton.styleFrom(
+                                  primary: Color.fromARGB(255, 173, 45, 45),
+                                  elevation: 3,
+                                  onPrimary: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) =>
+                                          UpdateDonorStatus()));
+                                },
+                                icon: Icon(
+                                  // <-- Icon
+                                  Icons.edit,
+                                  size: 24.0,
+                                ),
+                                label:
+                                    Text('  Update Donor Status  '), // <-- Text
                               ),
                             ),
                           ],

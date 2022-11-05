@@ -70,17 +70,19 @@ class _VerifyMailPageState extends State<VerifyMailPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
-                    'Please Check Provided Email!!',
+                    'A verification email has been sent to your email!!',
                     style: TextStyle(
                         fontFamily: 'OpenSans', fontWeight: FontWeight.bold),
                   ),
                   const Text(
-                    'A verification email has been sent to your email!!!',
+                    'Please, check your provided email',
                     style: TextStyle(
                         fontFamily: 'OpenSans', fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 24),
                   ElevatedButton.icon(
+                      style:
+                          ElevatedButton.styleFrom(backgroundColor: Colors.red),
                       onPressed: () {
                         sendVerificationEmail();
                         FirebaseAuth.instance.signOut();

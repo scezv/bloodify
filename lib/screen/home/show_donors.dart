@@ -43,6 +43,7 @@ class _ShowDonorsState extends State<ShowDonors> {
         stream: FirebaseFirestore.instance
             .collection('user')
             .where('donor', isEqualTo: true)
+            .where('available', isEqualTo: 'true')
             .where('district', isEqualTo: selectedDistrict)
             .where('bloodGroup', isEqualTo: bloodGroup)
             .snapshots(),

@@ -540,6 +540,7 @@ class _RegisterState extends State<Register> {
                                 "bloodGroup": dropdownGroup,
                                 'gender': dropdownGender,
                                 'district': dropdownDistrict,
+                                'available': 'true',
                               });
                               if (result == null) {
                                 setState(() {
